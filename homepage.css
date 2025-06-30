@@ -1,0 +1,352 @@
+/* roei hamihas id-323919829 ---------- tal braunstein  id-207118365 */
+body, html {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: white;
+  color: black;
+}
+
+a, button, input {
+  font-family: inherit;
+  font-size: 0.9em;
+}
+
+.reddit-header, .sidebar, .post, .right-sidebar, .footer {
+  background: white;
+  color: black;
+  border: 0.08em solid #ccc;
+  padding: 1.5%;
+}
+
+.reddit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1001;
+  background-color: white;
+}
+
+.reddit-logo {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #ff4500;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.reddit-icon {
+  font-size: 1.3em;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 30%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 2%;
+  color: #888;
+  font-size: 0.9em;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.4em 2% 0.4em 6%;
+  border-radius: 1.8em;
+  border: 0.08em solid #ccc;
+}
+
+.header-icons, .post-actions, .comment-actions, .sort-bar {
+  display: flex;
+  color: #888;
+  gap: 0.8em;
+  align-items: center;
+  font-size: 1.3em;
+}
+
+.sidebar {
+  width: 13%;
+  height: 100vh;
+  position: fixed;
+  top: 3.5em;
+  left: 0;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  display: flex;
+  align-items: center;
+  padding: 1.5% 0.8%;
+  border-radius: 0.4em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sidebar-menu li:hover {
+  background: #e2e4e6;
+}
+
+.sidebar-menu i {
+  margin-right: 4%;
+  width: 9%;
+  text-align: center;
+  color: #7c7c7c;
+}
+
+.main-content {
+  margin-left: 16%;
+  padding: 1.5%;
+}
+
+.sort-button, .toggle-comments-btn, .theme-toggle {
+  border: 0.08em solid #ccc;
+  border-radius: 1.8em;
+  padding: 0.4em 1.2em;
+  background: #f6f7f8;
+  cursor: pointer;
+}
+
+.post {
+  border: 0.08em solid #ddd;
+  border-radius: 0.8em;
+  background: #fff;
+  padding: 1.5%;
+  margin-bottom: 4%;
+  box-shadow: 0 0.08em 0.16em rgba(0,0,0,0.05);
+  max-width: 55%;
+  width: 100%;
+  height: 75vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: auto;
+}
+
+.post-meta {
+  font-size: 0.75em;
+  color: #7c7c7c;
+}
+
+.post-title {
+  font-size: 0.95em;
+  margin-bottom: 1.5%;
+}
+
+.post-image {
+  width: 100%;
+  height: 75vh;
+  border-radius: 0.8em;
+  margin-bottom: 1.5%;
+  object-fit: cover;
+}
+
+.right-footer {
+  position: absolute;
+  bottom: 4%;
+  left: 4%;
+  font-size: 0.75em;
+  color: #888;
+  line-height: 1.5;
+}
+
+.right-sidebar {
+  position: fixed;
+  top: 3.5em;
+  right: 0;
+  width: 28%;
+  height: calc(100vh - 3.5em);
+}
+
+.vote-btn, .reply-btn, .like-btn, .unlike-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.vote-btn:hover, .reply-btn:hover, .like-btn:hover, .unlike-btn:hover {
+  color: #0079d3;
+}
+
+.comment-form {
+  display: flex;
+  justify-content: flex-start; /* עבר מ-center לשמאל */
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 1em;
+  width: 100%;
+  padding: 0.5em 0;
+}
+
+.comment-form input {
+  padding: 0.4em 1em;
+  border-radius: 1.5em;
+  border: 0.08em solid #ccc;
+  width: 25%;
+  min-width: 180px;
+  max-width: 260px;
+  text-align: right;
+}
+
+.comment-form button {
+  padding: 0.4em 1em;
+  border-radius: 1.5em;
+  border: none;
+  background-color: #f6f7f8;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+
+.back-to-top {
+  position: fixed;
+  bottom: 4%;
+  right: 4%;
+  padding: 0.8% 1.5%;
+  font-size: 1.8em;
+  border: none;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #888;
+  cursor: pointer;
+  display: none;
+  z-index: 1002;
+}
+
+.back-to-top:hover {
+  background-color: #ffffff;
+}
+
+.typing-status, .typing-indicator {
+  font-size: 0.8em;
+  color: #888;
+  font-style: italic;
+}
+
+.post-container {
+  margin-bottom: 6%;
+}
+
+.delete-post-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: color 0.2s;
+}
+
+.delete-post-btn:hover {
+  color: red;
+}
+
+.share-dropdown-wrapper {
+  position: relative;
+}
+
+.share-dropdown {
+  position: absolute;
+  top: 2.2em;
+  right: 0;
+  background: white;
+  border: 0.08em solid #ddd;
+  border-radius: 0.8em;
+  box-shadow: 0 0.35em 0.9em rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  width: 13%;
+  z-index: 100;
+}
+
+.share-item {
+  padding: 4% 6%;
+  background: none;
+  text-align: left;
+  font-size: 0.95em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.share-item:hover {
+  background-color: #f2f2f2;
+}
+
+.post-type-dropdown {
+  position: absolute;
+  background: white;
+  border: 0.08em solid #ddd;
+  border-radius: 0.4em;
+  box-shadow: 0 0.35em 0.9em rgba(0, 0, 0, 0.1);
+  top: 2.2em;
+  right: 4%;
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+  width: 13%;
+}
+
+.post-type-option {
+  padding: 5% 7%;
+  background: none;
+  border: none;
+  text-align: right;
+  font-size: 0.95em;
+  cursor: pointer;
+}
+
+.post-type-option:hover {
+  background-color: #f2f2f2;
+}
+
+/* DARK MODE */
+.dark-mode body,
+.dark-mode html,
+.dark-mode .post-container,
+.dark-mode .main-content {
+  background: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .reddit-header,
+.dark-mode .sidebar,
+.dark-mode .post,
+.dark-mode .right-sidebar,
+.dark-mode .footer,
+.dark-mode .comment,
+.dark-mode .sort-button,
+.dark-mode .comment-form input,
+.dark-mode .search-bar input,
+.dark-mode .toggle-comments-btn {
+  background: #1e1e1e !important;
+  border-color: #333 !important;
+  color: #fff !important;
+}
+
+.dark-mode input::placeholder {
+  color: #ccc;
+}
+
+.dark-mode .like-btn,
+.dark-mode .unlike-btn,
+.dark-mode .reply-btn,
+.dark-mode .search-icon {
+  color: #ccc !important;
+}
