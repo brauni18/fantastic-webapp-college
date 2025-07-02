@@ -2,6 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const post_Router = require('./routes/post');
+const api_posts = require('./routes/api_posts');
 
+require('custom-env').env(process.env.NODE_ENV,'./config');
+mongoose.connect(process.env.CONNECTION_STRING, {});
 
-const
+var app = express();
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use('/posts', post_Router);
+app.use('/api/posts',api_posts);
+
+app.listen(process.env.PORT);
