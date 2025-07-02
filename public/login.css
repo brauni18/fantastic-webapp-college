@@ -1,5 +1,5 @@
 html, body {
-    background-image: url("https://preview.redd.it/websites-not-showing-up-correctly-v0-3fs6si1ro78d1.png?width=640&crop=smart&auto=webp&s=7b0a217b293ae4b798f9e4740caa50ceb3af9304");
+    background-image: url("bga.png");
     background-size: auto 110%; 
     background-position: top center;
     background-repeat: no-repeat;
@@ -15,7 +15,7 @@ html, body {
     font-size: 18px;
 }
 .navbar-logo {
-    height: 30px; 
+    height: 48px; 
     width: auto; 
     vertical-align: middle;
     margin-left: 20px; 
