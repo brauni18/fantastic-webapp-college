@@ -5,9 +5,9 @@ const mongoose = require('mongoose');
 const post_Router = require('./routes/post');
 const api_posts = require('./routes/api_posts');
 const users_Router = require('./routes/users');
-const api_posts = require('./routes/api_users');
+const api_users = require('./routes/api_users');
 const groups_Router = require('./routes/groups');
-const api_posts = require('./routes/api_groups');
+const api_groups = require('./routes/api_groups');
 
 require('custom-env').env(process.env.NODE_ENV,'./config');
 mongoose.connect(process.env.CONNECTION_STRING, {});
