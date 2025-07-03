@@ -3,10 +3,12 @@ const router = express.Router();
 
 const groupController = require('../controller/groupsController');
 
-router.post('/', requireAuth, groupController.createGroup);
+router.route('/')
+.get(groupController.getAllGroups);
+
+router.route('/create'), requireAuth, groupController.createGroup);
 
 
-router.get('/', groupController.getAllGroups);
 
 router.get('/:id', groupController.getGroupById);
 
