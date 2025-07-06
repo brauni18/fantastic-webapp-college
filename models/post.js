@@ -4,11 +4,37 @@ const postSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    image:{
+      type: jpeg,
+      required: false,  
+      trim: true,
+    },
+    video: {
+      type: String,
+      required: false,
+      trim: true
+    },
+    audio: {
+      type: String,
+      required: false,
+      trim: true
+    }    
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    location: {
+      type: {
+        type: String,
+        enum: ['Point'], // GeoJSON type
+        required: true
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        required: true
+      }
+    }
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
