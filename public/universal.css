@@ -1,0 +1,111 @@
+body {
+    background-image: url("bga.png");
+    background-size: auto 110%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+    font-family: "Google Sans", arial, sans-serif;
+}
+#navbar {
+    transition: transform 0.3s ease-in-out;
+    background-image: url("GRADIANCE.png");
+    border: #edebeb 0.4px solid; 
+    height: 60px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    z-index:10000;
+}
+#navbar.collapsed {
+    transform:translateY(-80%);
+    transition: transform 0.3s ease-in-out;
+}
+.container-fluid {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 0 1.5em;
+}
+.navbar-section {
+    display: flex;
+    align-items: center;
+}
+.navbar-section.left {
+    flex: 1;
+    align-items: center;
+    margin-left: 0.5em;
+    height: 100%;
+}
+.navbar-section.center {
+    position: relative;
+}
+.navbar-section.right {
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+}
+.navbar-logo {
+    height: 48px; 
+    width: auto; 
+    vertical-align: middle;
+    margin-left: 0.5em;
+    font-size: 1.2em;
+    color: #8e8e8f;
+}
+.reddit-logo {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #8e8e8f;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+}
+.search-bar {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 600px;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+.search-icon {
+    position: absolute;
+    left: 8px;
+    color: #8e8e8f;
+    font-size: 1em;
+    pointer-events: none;
+    z-index: 2;
+}
+.search-bar input {
+    width: 100%;
+    padding: 0.4em 1em 0.4em 2.2em;
+    border-radius: 1.8em;
+    border: 0.08em solid #ccc;
+    position: relative;
+    z-index: 1;
+    color: #444444;
+}
+.search-bar input::placeholder {
+    color: #8e8e8f; 
+    opacity: 1;
+}
+.header-icons, .post-actions, .comment-actions, .sort-bar {
+    display: flex;
+    color: #8e8e8f;
+    gap: 0.8em;
+    align-items: center;
+    font-size: 1.3em;
+    justify-content: flex-end;
+    height: 100%;
+}
