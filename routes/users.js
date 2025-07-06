@@ -5,7 +5,8 @@ const { createUser,
     updateUser,
     updateUserPassword,
     getUser,
-    getAllUsers } = require('../controller/users');
+    getAllUsers,
+    loginUser } = require('../controller/users');
 
 // Route to create a new user
 router.post('/', createUser);
@@ -19,3 +20,7 @@ router.get('/:id', getUser);
 router.get('/', getAllUsers);
 // Route to update user password
 router.put('/password/:id', updateUserPassword);
+// Route to login a user
+router.post('/login', loginUser);
+
+module.exports = router;

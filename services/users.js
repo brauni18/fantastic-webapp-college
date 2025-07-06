@@ -1,5 +1,6 @@
 const User = require('../models/users');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 exports.createUser = async ({username, email, password, firstName, lastName, bio}) => {
     if(!username || !email || !password || !firstName || !lastName) {
@@ -78,4 +79,34 @@ exports.getUser = async (userId) => {
 exports.getAllUsers = async () => {
     const users = await User.find().select('-password');
     return users;
+}
+
+exports.loginUser = async (username, password) => {
+    if (!username || !password) {
+        throw new Error('Username and password are required');
+    }
+    const user = await User.findOne({username});
+    if (!user) {
+        throw new Error('User not found');
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        throw new Error('Invalid password');
+    }
+    const token = jwt.sign(
+        { username },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+    );
+    return {
+        message: 'login successful',
+        token,
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+        }
+    }
 }

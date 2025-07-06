@@ -86,5 +86,28 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-module.exports = {userService, createUser, deleteUser, updateUser,updateUserPassword, getUser, getAllUsers};
+const loginUser = async (req, res) => {
+    try {
+        const {username, password} = req.body;
+        const result = await userService.loginUser(username, password);
+        res.status(200).json(result);
+    } catch (error) {
+        const msg = error.message || 'Internal server error';
+        const status = msg === 'Username and password are required' || msg === 'Invalid username or password'
+            ? 400 : 500;
+        console.error('Error logging in:', error);
+        res.status(status).json({ message: msg });
+    }
+};
+
+module.exports = {
+    userService, 
+    createUser, 
+    deleteUser, 
+    updateUser,
+    updateUserPassword, 
+    getUser, 
+    getAllUsers,
+    loginUser   
+};
 
