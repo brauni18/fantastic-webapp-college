@@ -1,6 +1,6 @@
-const groupService = require('../services/groups');
+// const groupService = require('../services/groups');
 
-// const Group = require('../models/groups');
+const Group = require('../models/groups');
 // const mongoose = require('mongoose');
 
 // add new group

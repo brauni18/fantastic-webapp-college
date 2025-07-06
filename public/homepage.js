@@ -1,4 +1,4 @@
-// roei hamihas id-323919829 ---------- tal braunstein  id-207118365
+
 function showBurgerPost(button) {
   const post = document.getElementById('burger-post');
   const visible = post.style.display === 'block';
