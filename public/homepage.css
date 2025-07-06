@@ -39,6 +39,9 @@ a, button, input {
 
 .reddit-icon {
   font-size: 1.3em;
+   height: 2px; 
+    width: auto; 
+    vertical-align: middle;
 }
 
 .search-bar {
