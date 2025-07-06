@@ -12,6 +12,7 @@ const api_groups = require('./routes/api_groups');
 require('custom-env').env(process.env.NODE_ENV,'./config');
 mongoose.connect(process.env.CONNECTION_STRING, {});
 
+
 var app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,3 +26,7 @@ app.use('/api/users', api_users);
 app.use('/groups', groups_Router);
 app.use('/api/groups', api_groups);
 app.listen(process.env.PORT);
+
+//add for api_groups.js will work
+const apiGroupRoutes = require('./routes/api_groups');
+app.use('/api/groups', apiGroupRoutes);

@@ -1,39 +1,30 @@
-const Group = require('../models/groups');
-const mongoose = require('mongoose');
+const groupService = require('../services/groupService');
 
-// add new group
+// Create a new group
 const createGroup = async (req, res) => {
   try {
     const { name, description } = req.body;
-
-    const group = new Group({
-      name,
-      description,
-      createdBy: req.user._id,
-      members: [req.user._id]
-    });
-
-    await group.save();
+    const group = await groupService.createGroup(name, description, req.user._id);
     res.status(201).json(group);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-// see all the group 
+// Get all groups
 const getAllGroups = async (req, res) => {
   try {
-    const groups = await Group.find().populate('createdBy', 'username');
+    const groups = await groupService.getAllGroups();
     res.json(groups);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-
+// Get group by ID
 const getGroupById = async (req, res) => {
   try {
-    const group = await Group.findById(req.params.id).populate('members', 'username');
+    const group = await groupService.getGroupById(req.params.id);
     if (!group) return res.status(404).json({ error: 'Group not found' });
     res.json(group);
   } catch (err) {
@@ -41,80 +32,45 @@ const getGroupById = async (req, res) => {
   }
 };
 
-// add user to a new group
+// Join a group
 const joinGroup = async (req, res) => {
   try {
-    const group = await Group.findById(req.params.id);
-    if (!group) return res.status(404).json({ error: 'Group not found' });
-
-    if (group.members.includes(req.user._id)) {
-      return res.status(400).json({ error: 'Already a member' });
-    }
-
-    group.members.push(req.user._id);
-    await group.save();
-
-    res.json({ message: 'Joined group successfully' });
+    const result = await groupService.joinGroup(req.params.id, req.user._id);
+    res.json({ message: 'Joined group', group: result });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
-// leave a group(all users can leave)
+// Leave a group
 const leaveGroup = async (req, res) => {
   try {
-    const group = await Group.findById(req.params.id);
-    if (!group) return res.status(404).json({ error: 'Group not found' });
-
-    group.members = group.members.filter(
-      memberId => memberId.toString() !== req.user._id.toString()
-    );
-
-    await group.save();
-    res.json({ message: 'Left group successfully' });
+    const result = await groupService.leaveGroup(req.params.id, req.user._id);
+    res.json({ message: 'Left group', group: result });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
-// delete a group (only the creator can delete)
+
+// Delete a group
 const deleteGroup = async (req, res) => {
   try {
-    const group = await Group.findById(req.params.id);
-    if (!group) return res.status(404).json({ error: 'Group not found' });
-
-    if (group.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: 'Unauthorized: Only the creator can delete the group' });
-    }
-
-    await group.remove();
-    res.json({ message: 'Group deleted successfully' });
+    await groupService.deleteGroup(req.params.id, req.user._id);
+    res.json({ message: 'Group deleted' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(403).json({ error: err.message });
   }
 };
 
-// update a group (only the creator can update)
+// Update group details
 const updateGroup = async (req, res) => {
   try {
-    const { name, description } = req.body;
-    const group = await Group.findById(req.params.id);
-    if (!group) return res.status(404).json({ error: 'Group not found' });
-
-    if (group.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: 'Unauthorized: Only the creator can update the group' });
-    }
-
-    group.name = name || group.name;
-    group.description = description || group.description;
-
-    await group.save();
+    const group = await groupService.updateGroup(req.params.id, req.user._id, req.body);
     res.json(group);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(403).json({ error: err.message });
   }
 };
-
-
 
 module.exports = {
   createGroup,
