@@ -1,5 +1,7 @@
+// const groupService = require('../services/groups');
+
 const Group = require('../models/groups');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
 // add new group
 const createGroup = async (req, res) => {
