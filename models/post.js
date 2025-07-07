@@ -1,40 +1,37 @@
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['text', 'image', 'video'],
+    required: true
+  },
+  title: {
+    type: String,
+    trim: true
+  },
   content: {
     type: String,
-    required: true,
-    trim: true,
-    image:{
-      type: jpeg,
-      required: false,  
-      trim: true,
-    },
-    video: {
-      type: String,
-      required: false,
-      trim: true
-    },
-    audio: {
-      type: String,
-      required: false,
-      trim: true
-    }    
+    trim: true
+  },
+  image: {
+    filename: String,
+    mimetype: String,
+    path: String // Where the file is stored on your server
+  },
+  video: {
+    filename: String,
+    mimetype: String,
+    path: String
+  },
+  audio: {
+    filename: String,
+    mimetype: String,
+    path: String
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-    location: {
-      type: {
-        type: String,
-        enum: ['Point'], // GeoJSON type
-        required: true
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        required: true
-      }
-    }
+    default: Date.now
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
@@ -44,8 +41,7 @@ const postSchema = new mongoose.Schema({
   group: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Group',
-    required: false,
-    default: null // Optional, can be null if the post is not associated with a group
+    default: null
   }
 });
 
