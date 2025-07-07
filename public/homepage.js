@@ -1,4 +1,3 @@
-
 function showBurgerPost(button) {
   const post = document.getElementById('burger-post');
   const visible = post.style.display === 'block';
@@ -210,5 +209,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+ 
 });
+
+
 

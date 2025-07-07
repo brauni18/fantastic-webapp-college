@@ -109,3 +109,17 @@ body {
     justify-content: flex-end;
     height: 100%;
 }
+.post-type-btn {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  padding: 4px 8px;
+  transition: border-color 0.2s;
+}
+.post-type-btn.selected {
+  border-bottom: 2px solid #007bff;
+  font-weight: bold;
+}
