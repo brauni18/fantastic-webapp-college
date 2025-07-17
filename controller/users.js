@@ -100,6 +100,14 @@ const loginUser = async (req, res) => {
     }
 };
 
+const isLoggedIn = (req, res, next) => {
+    if (req.session.userId != null) {
+        return next();
+    }
+    // res.status(401).json({ message: 'Unauthorized' });
+    res.redirect('/users');
+};
+
 module.exports = {
     userService, 
     createUser, 
@@ -108,6 +116,7 @@ module.exports = {
     updateUserPassword, 
     getUser, 
     getAllUsers,
-    loginUser   
+    loginUser,
+    isLoggedIn 
 };
 
