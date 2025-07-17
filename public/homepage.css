@@ -1,10 +1,4 @@
 /* roei hamihas id-323919829 ---------- tal braunstein  id-207118365 */
-body, html {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: white;
-  color: black;
-}
 
 a, button, input {
   font-family: inherit;
@@ -35,13 +29,6 @@ a, button, input {
   display: flex;
   align-items: center;
   gap: 0.4em;
-}
-
-.reddit-icon {
-  font-size: 1.3em;
-   height: 2px; 
-    width: auto; 
-    vertical-align: middle;
 }
 
 .search-bar {
