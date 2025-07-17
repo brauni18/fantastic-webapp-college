@@ -1,9 +1,11 @@
 body {
     background-image: url("bga.png");
-    background-size: auto 110%; 
+    background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     height: 100vh;
+    margin: 0;
     padding-top: 76px;
     font-family: "Google Sans", arial, sans-serif;
 }
@@ -139,16 +141,6 @@ header {
   font-weight: bold;
 }
 
-html, body {
-    background-image: url("bga.png");
-    background-size: cover; 
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    height: 100vh;
-    margin: 0;
-    font-family: "Google Sans", arial, sans-serif;
-}
 
 #navbar{
     background-color: #ffffff;
@@ -178,9 +170,11 @@ html, body {
     display: flex;
     flex-direction: column; 
     justify-content: space-between; 
-    height: 80%; /* Ensure the container takes full height */
+    height: 80%;
     width: 500px; /* Adjust width to make it compact */
     margin: 0 auto; /* Center horizontally */
+    box-sizing: border-box;
+    align-items: center;
     max-width: 90vw;
     padding-top: 30px; 
     padding-bottom: 30px; 
@@ -397,4 +391,10 @@ form div.correct input{
     color: rgb(194, 55, 45);
     
     font-size: 14px;
+}
+
+html.dark-mode body{
+  border-color: #333 !important;
+  color: #fff !important;
+  background-image: url("bgadm.png") !important; 
 }
