@@ -21,6 +21,14 @@ body {
     width:100vw;
     z-index:10000;
 }
+.dark-mode #navbar {
+    background-image: url("GRADIANCEdm.png");
+    border: #333 0.4px solid; 
+}
+.dark-logo { display: none; }
+.light-logo { display: inline; }
+.dark-mode .light-logo { display: none; }
+.dark-mode .dark-logo { display: inline; }
 #navbar.collapsed {
     transform:translateY(-80%);
     transition: transform 0.3s ease-in-out;
@@ -72,7 +80,7 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
+    width: auto;
     max-width: 600px;
     min-width: 200px;
     display: flex;
@@ -217,10 +225,9 @@ html, body {
     box-sizing: border-box;
 }
 #new-user {
-    text-align: left;
+    text-align: center;
     display: block;
     font-size: 14px; /* Match Forgot password */
-    margin-left: 13px;
     margin-top: 10px;
     padding-left: 0;
 }
@@ -341,7 +348,7 @@ html, body {
     
 }
 #Forgot-password-lnk {
-    text-align: left;
+    text-align: center;
     display: block;
     font-size: 14px;
     text-decoration: none;
