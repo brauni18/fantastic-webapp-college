@@ -3,15 +3,39 @@ const postService = require('../services/post');
 // Create a new post (can be with or without a group)
 const createPost = async (req, res) => {
     try {
-        if (!req.user) {
-            return res.status(401).json({ error: "User not logged in" });
-        }
-        const { content, group } = req.body;
-        const post = await postService.createPost(content, req.user._id, group);
-        res.status(201).json(post);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    const { type, title, content } = req.body;
+    let image = null, video = null;
+
+    if (req.files && req.files.image) {
+      const file = req.files.image[0];
+      image = {
+        filename: file.filename,
+        mimetype: file.mimetype,
+        path: file.path
+      };
     }
+    if (req.files && req.files.video) {
+      const file = req.files.video[0];
+      video = {
+        filename: file.filename,
+        mimetype: file.mimetype,
+        path: file.path
+      };
+    }
+
+    const post = await Post.create({
+      type,
+      title,
+      content,
+      image,
+      video,
+      createdBy: req.user._id
+    });
+
+    res.status(201).json(post);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // Get all posts (including posts without a group)

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +21,9 @@
     </div>
 
     <div class="header-icons">
-      <i class="bi bi-plus-lg"></i>
+      <a href="#" class="create-post-link">
+        <i id="create-post-btn" class="create-post-btn bi bi-plus-lg"></i>
+      </a>
       <i class="bi bi-bullseye"></i>
       <i class="bi bi-chat-dots"></i>
       <i class="fas fa-bell"></i>
@@ -135,9 +136,9 @@
     </div>
   
 <!-- כפתור הוסף פוסט -->
-<div style="margin-top: 1em;">
+<!-- <div style="margin-top: 1em;">
   <button class="add-post-btn" onclick="showBurgerPost(this)">הוסף/הסר פוסט</button>
-</div>
+</div> -->
 
 
   <!-- פוסט ההמבורגר מוסתר כברירת מחדל -->
@@ -199,7 +200,41 @@
             </div>
           </div> 
         </div>         
-  </main>
+
+  <!-- Create Post Modal -->
+  <div id="createPostModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:2em; border-radius:10px; width:350px; position:relative;">
+      <button onclick="closeCreatePostModal()" style="position:absolute; top:10px; right:10px;">✖</button>
+      <h3>Create post</h3>
+
+      <form id="createPostForm">
+        <div id="postTypeBtns" style="display: flex; gap: 10px; margin: 8px 0;">
+          <button type="button" class="post-type-btn selected" data-type="text">📝 text</button>
+          <button type="button" class="post-type-btn" data-type="image">📷 image</button>
+          <button type="button" class="post-type-btn" data-type="video">🎥 video</button>
+        </div>
+
+        <div id="textFields">
+          <input type="text" name="title" placeholder="Title *" required style="width:100%;margin:8px 0;">
+          <textarea name="content" placeholder="write somthin..." required style="width:100%;height:100px;margin:8px 0;"></textarea>
+        </div>
+
+        <div id="imageFields" style="display:none;">
+          <input type="text" name="title" placeholder="Title *" required style="width:100%;margin:8px 0;">
+          <input type="text" name="image" placeholder="image link" accept="image/*" style="width:100%;margin:8px 0;">
+        </div>
+      
+        <div id="videoFields" style="display:none;">
+           <input type="text" name="title" placeholder="Title *" required style="width:100%;margin:8px 0;">
+          <input type="text" name="video" placeholder="vido link" accept="video/*" style="width:100%;margin:8px 0;">
+        </div>
+      
+        <button type="submit" style="margin-top:1em;">submit</button>
+      </form>
+
+    </div>
+  </div>
+</main>
 
   <aside class="right-sidebar">
     <div class="right-footer">
@@ -211,6 +246,7 @@
   </aside>
 
   <script src="homepage.js"></script>
+  <script src="posts.js"></script>
 <button id="backToTop" class="back-to-top">
   <i class="bi bi-caret-up-fill"></i>
 </button>

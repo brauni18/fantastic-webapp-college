@@ -15,7 +15,7 @@ var app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-// app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 //routes
