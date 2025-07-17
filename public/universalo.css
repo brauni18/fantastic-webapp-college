@@ -12,24 +12,6 @@
     gap: 1em;
     flex-direction: row;
 }
-.search-icon {
-  position: absolute;
-  left: 2%;
-  color: #888;
-  font-size: 0.9em;
-}
-.search-bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  max-width:400px;
-  margin: 0;
-  width: 100%;
-}
-input {
-  font-family: inherit;
-  font-size: 0.9em;
-}
 .reddit-logo {
   font-weight: bold;
   font-size: 1.2em;
@@ -67,11 +49,6 @@ body, html {
   color: black;
 }
 
-a, button, input {
-  font-family: inherit;
-  font-size: 0.9em;
-}
-
 .reddit-header, .sidebar, .post, .right-sidebar, .footer {
   background: white;
   color: black;
@@ -89,47 +66,13 @@ a, button, input {
   background-color: white;
 }
 
-
-
 .reddit-icon {
   font-size: 1.3em;
    height: 2px; 
     width: auto; 
     vertical-align: middle;
 }
-
-.search-bar {
-    flex: 1;
-    width: 100%;
-    max-width: 600px;
-    min-width: 200px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin: 0 1em;
-}
-
-.search-icon {
-  position: absolute;
-  left: 2%;
-  color: #888;
-  font-size: 0.9em;
-}
-
-.search-bar input {
-  padding: 0.4em 2% 0.4em 6%;
-  border-radius: 1.8em;
-  border: 0.08em solid #ccc;
-}
-
-.header-icons, .post-actions, .comment-actions, .sort-bar {
-  display: flex;
-  color: #888;
-  gap: 0.8em;
-  align-items: center;
-  font-size: 1.3em;
-}
-
+/* The rest of the unique sidebar, post, and dark mode rules remain as they are not present in universal.css */
 .sidebar {
   width: 13%;
   height: 100vh;
@@ -214,23 +157,6 @@ a, button, input {
   object-fit: cover;
 }
 
-.right-footer {
-  position: absolute;
-  bottom: 4%;
-  left: 4%;
-  font-size: 0.75em;
-  color: #888;
-  line-height: 1.5;
-}
-
-.right-sidebar {
-  position: fixed;
-  top: 3.5em;
-  right: 0;
-  width: 28%;
-  height: calc(100vh - 3.5em);
-}
-
 .vote-btn, .reply-btn, .like-btn, .unlike-btn {
   background: none;
   border: none;
@@ -245,7 +171,7 @@ a, button, input {
 
 .comment-form {
   display: flex;
-  justify-content: flex-start; /*lsmol cetner avar me*/
+  justify-content: flex-start;
   align-items: center;
   gap: 0.5em;
   margin-top: 1em;
@@ -272,7 +198,6 @@ a, button, input {
   font-weight: bold;
   font-size: 0.9em;
 }
-
 
 .back-to-top {
   position: fixed;
@@ -377,12 +302,14 @@ a, button, input {
 }
 
 /* DARK MODE */
-.dark-mode body,
-.dark-mode html,
-.dark-mode .post-container,
-.dark-mode .main-content {
-  background: #121212 !important;
-  color: #e0e0e0 !important;
+
+.dark-mode .theme-toggle {
+  background: #333;
+  color: #fff;
+  border-color: #555;
+}
+.dark-mode .sidebar-menu li:hover {
+color: #333;
 }
 
 .dark-mode .reddit-header,
@@ -394,7 +321,11 @@ a, button, input {
 .dark-mode .sort-button,
 .dark-mode .comment-form input,
 .dark-mode .search-bar input,
-.dark-mode .toggle-comments-btn {
+.dark-mode .toggle-comments-btn,
+.dark-mode body,
+.dark-mode html,
+.dark-mode .post-container,
+.dark-mode .main-content  {
   background: #1e1e1e !important;
   border-color: #333 !important;
   color: #fff !important;
