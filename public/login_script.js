@@ -18,7 +18,7 @@ let error =[];
     }else {
         // No errors, redirect to homepage
         e.preventDefault(); // Prevent default form submission
-        window.location.href = 'homepage.html'; // Change to your homepage file
+        window.location.href = 'index.html'; // Change to your homepage file
     }
 })
 
@@ -102,3 +102,29 @@ email_input.addEventListener('input', function() {
   }
   
   updateLoginButtonState();
+
+
+
+
+
+
+const navbar = document.getElementById('navbar');
+const hoverArea = document.getElementById('navbar-hover-area');
+let collapseTimeout = null;
+
+function showNavbar() {
+    clearTimeout(collapseTimeout);
+    navbar.classList.remove('collapsed');
+}
+
+function hideNavbar() {
+    collapseTimeout = setTimeout(() => {
+        navbar.classList.add('collapsed');
+    }, 5000);
+}
+
+navbar.addEventListener('mouseenter', showNavbar);
+navbar.addEventListener('mouseleave', hideNavbar);
+hoverArea.addEventListener('mouseenter', showNavbar);
+hoverArea.addEventListener('mouseleave', hideNavbar);
+navbar.classList.add('collapsed');

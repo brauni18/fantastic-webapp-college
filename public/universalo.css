@@ -1,8 +1,69 @@
-/* roei hamihas id-323919829 ---------- tal braunstein  id-207118365 */
+.header-icons{
+  display: flex;
+  color: #888;
+  gap: 0.8em;
+  align-items: center;
+  font-size: 1.3em;
+}
+.container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    flex-direction: row;
+}
+.search-icon {
+  position: absolute;
+  left: 2%;
+  color: #888;
+  font-size: 0.9em;
+}
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width:400px;
+  margin: 0;
+  width: 100%;
+}
+input {
+  font-family: inherit;
+  font-size: 0.9em;
+}
+.reddit-logo {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #8E8E8F;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.navbar-section.left,
+.navbar-section.right,
+.navbar-section.center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+.navbar-section.center {
+    justify-content: center;
+}
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+
+
+
+/* legacy code i never properly removed in fear of breaking the site */
 body, html {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: white;
   color: black;
 }
 
@@ -28,14 +89,7 @@ a, button, input {
   background-color: white;
 }
 
-.reddit-logo {
-  font-weight: bold;
-  font-size: 1.2em;
-  color: #8E8E8F;
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-}
+
 
 .reddit-icon {
   font-size: 1.3em;
@@ -45,10 +99,14 @@ a, button, input {
 }
 
 .search-bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 30%;
+    flex: 1;
+    width: 100%;
+    max-width: 600px;
+    min-width: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 1em;
 }
 
 .search-icon {
@@ -59,7 +117,6 @@ a, button, input {
 }
 
 .search-bar input {
-  width: 100%;
   padding: 0.4em 2% 0.4em 6%;
   border-radius: 1.8em;
   border: 0.08em solid #ccc;
