@@ -28,8 +28,8 @@ router.get('/', postController.getAllPosts);
 
 router.get('/group/:groupId', postController.getPostsByGroup);
 
-router.get('/my-posts', requireAuth, postController.getPostsByUser);
+// router.get('/my-posts', requireAuth, postController.getPostsByUser);
 
-router.delete('/:id', requireAuth, postController.deletePost);
+// router.delete('/:id', requireAuth, postController.deletePost);
 
 module.exports = router;
