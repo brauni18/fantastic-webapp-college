@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const postController = require('../controller/post');
+const Post = require('../models/post');
 
 // Configure multer
 const storage = multer.diskStorage({
@@ -14,22 +15,24 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+router.get('/', postController.renderHomePage);
 // For image or video upload
-router.post(
-  '/',
-  upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'video', maxCount: 1 }
+router.post( '/',upload.fields([
+    { name: 'image', maxCount: 4},
+    { name: 'video', maxCount: 4 }
   ]),
   postController.createPost
 );
 
-router.get('/', postController.getAllPosts);
+router.route('/')
+  // .get(postController.getAllPosts)
+  .post(postController.createPost);
 
 router.get('/group/:groupId', postController.getPostsByGroup);
 
-router.get('/my-posts', requireAuth, postController.getPostsByUser);
+router.get('/my-posts', postController.getPostsByUser);
 
-router.delete('/:id', requireAuth, postController.deletePost);
+router.delete('/:id', postController.deletePost);
+
 
 module.exports = router;

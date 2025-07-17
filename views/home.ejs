@@ -1,0 +1,21 @@
+<!-- filepath: views/home.ejs -->
+<main class="main-content">
+  <% posts.forEach(post => { %>
+    <div class="post-container">
+      <div class="post">
+        <h6 class="post-meta"><%= post.createdBy?.username || 'Anonymous' %> • <%= post.createdAt.toLocaleString() %></h6>
+        <h5 class="post-title"><%= post.title %></h5>
+        <% if (post.type === 'image' && post.image?.path) { %>
+          <img class="post-image" src="/<%= post.image.path %>" alt="Post Image">
+        <% } else if (post.type === 'video' && post.video?.path) { %>
+          <video controls class="post-video"><source src="/<%= post.video.path %>"></video>
+        <% } else { %>
+          <div class="post-content"><%= post.content %></div>
+        <% } %>
+        <div class="post-actions">
+          <button class="like-btn post-like"><i class="fas fa-arrow-up"></i> <span class="like-count">0</span></button>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</main>

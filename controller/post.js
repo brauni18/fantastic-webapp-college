@@ -86,6 +86,11 @@ const deletePost = async (req, res) => {
     }
 };
 
+exports.renderHomePage = async (req, res) => {
+  const posts = await Post.find().populate('createdBy', 'username').sort({ createdAt: -1 });
+  res.render('home', { posts }); // Renders views/home.ejs
+};
+
 module.exports = {
     createPost,
     getAllPosts,
