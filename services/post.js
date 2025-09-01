@@ -1,26 +1,30 @@
-const Post = require('../models/post');
+const PostModel = require('../models/post');
 // const Group = require('../models/groups');
 
+
 // Create a new post
-const createPost = async ({ type, title, content, createdBy, group = null, image, video, audio }) => {
+const createPost = async (type,title, content, createdBy, community) => {
     try {
-        console.log('Creating post with:', { type ,content, createdBy, group });
-        const newPost = new Post({
-            type,
-            title,
-            content,
-            createdBy,
-            group,
-            image,
-            video,
-            audio,
-            createdAt: new Date()
+        console.log(' in service Creating post with:', title, content, createdBy, community);
+
+        // Explicitly set the current date/time
+        const now = new Date();
+        console.log('Current timestamp:', now);
+        
+        const newPost = new PostModel({
+            type: type,
+            title: title,
+            content: content,
+            createdBy: createdBy,
+            community: community,
+            createdAt: now
         });
         const savedPost = await newPost.save();
         return savedPost;
-    } catch (error) {
-        console.error('Error creating post:', error);
-        throw new Error('Failed to create post');
+
+    } catch (error) { 
+        console.error('service - Error creating post:', error);
+        throw new Error('service - Failed to create post: ' + error.message);
     }
 };
 
@@ -113,6 +117,7 @@ const createPost = async ({ type, title, content, createdBy, group = null, image
 
 module.exports = {
     createPost,
+    
     // updatePost,
     // getPost,
     // getAllPosts,

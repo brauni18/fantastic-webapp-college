@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const post_Router = require('./routes/post');
 const users_Router = require('./routes/users');
@@ -10,7 +11,14 @@ const groups_Router = require('./routes/groups');
 
 
 require('custom-env').env(process.env.NODE_ENV,'./config');
-mongoose.connect(process.env.CONNECTION_STRING, { });
+mongoose.connect(process.env.CONNECTION_STRING, { })
+.then(() => {
+    console.log('✅ Connected to MongoDB successfully');
+})
+.catch((error) => {
+    console.error('❌ MongoDB connection error:', error);
+    process.exit(1);
+});
     
 var app = express();
 app.use(cors());
