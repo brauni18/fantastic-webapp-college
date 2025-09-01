@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const mongoose = require('mongcd /Users/roeihamihas/Documents/מדעי המחשב שנה א סמסטר ב/project aplicationoose');
 
 const post_Router = require('./routes/post');
 const users_Router = require('./routes/users');
