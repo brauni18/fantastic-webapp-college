@@ -1,98 +1,180 @@
-API_BASE_URL = '/posts';
-const postCreation = document.getElementById('postCreation');
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Open modal when clicking the create post button
+API_BASE_URL = '/posts';
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Add event listener for the create post button
   document.getElementById('create-post-btn').addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('createPostModal').style.display = 'flex';
+    selectPostType('text'); // Set default to text and set up required fields
   });
+  
+  //add event listener for the close button
+  document.getElementById('closePostModal').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('createPostModal').style.display = 'none';
+  });
+  
+  // Add form submission handler
+  document.getElementById('createPostForm').addEventListener('submit', handlePostSubmit);
 });
+const text_button = document.getElementById('post-type-text');
+const image_button = document.getElementById('post-type-image');
+const video_button = document.getElementById('post-type-video');
 
-function closeCreatePostModal() {
-  document.getElementById('createPostModal').style.display = 'none';
+// Add event listeners for post type buttons
+text_button.addEventListener('click', () => selectPostType('text'));
+image_button.addEventListener('click', () => selectPostType('image'));
+video_button.addEventListener('click', () => selectPostType('video'));
+
+// Function to select post type and show corresponding input section
+const selectPostType = (type) => {
+  
+  const text_input= document.getElementById('text-input');
+  const image_input = document.getElementById('image-input');
+  const video_input = document.getElementById('video-input');
+  
+  
+  // Show selected input section and mark button as active
+  if (type === 'text') {
+    text_input.style.display = 'block';
+    image_input.style.display = 'none';
+    video_input.style.display = 'none';
+    
+    // Add required to text inputs only
+    document.getElementById('post-title').setAttribute('required', 'required');
+    document.getElementById('post-content-text').setAttribute('required', 'required');
+
+    document.getElementById('image-title').removeAttribute('required');
+    document.getElementById('image-file').removeAttribute('required');
+    document.getElementById('video-title').removeAttribute('required');
+    document.getElementById('video-file').removeAttribute('required');
+    
+    text_button.classList.add('active');
+    image_button.classList.remove('active');
+    video_button.classList.remove('active');
+    
+  } else if (type === 'image') {
+    image_input.style.display = 'block';
+    text_input.style.display = 'none';
+    video_input.style.display = 'none';
+    
+    // Add required to image inputs only
+    document.getElementById('image-title').setAttribute('required', 'required');
+    document.getElementById('image-file').setAttribute('required', 'required');
+
+    document.getElementById('post-title').removeAttribute('required');
+    document.getElementById('post-content-text').removeAttribute('required');
+    document.getElementById('video-title').removeAttribute('required');
+    document.getElementById('video-file').removeAttribute('required');
+    
+    image_button.classList.add('active');
+    text_button.classList.remove('active');
+    video_button.classList.remove('active');
+    
+  } else if (type === 'video') {
+    video_input.style.display = 'block';
+    text_input.style.display = 'none';
+    image_input.style.display = 'none';
+
+    // Add required to video inputs only
+    document.getElementById('video-title').setAttribute('required', 'required');
+    document.getElementById('video-file').setAttribute('required', 'required');
+
+    document.getElementById('post-title').removeAttribute('required');
+    document.getElementById('post-content-text').removeAttribute('required');
+    document.getElementById('image-title').removeAttribute('required');
+    document.getElementById('image-file').removeAttribute('required');
+
+    video_button.classList.add('active');
+    text_button.classList.remove('active'); 
+    image_button.classList.remove('active');
+  }
+ 
 }
 
-function togglePostTypeFields() {
-  const type = document.getElementById('postType').value;
-  document.getElementById('textFields').style.display = type === 'text' ? 'block' : 'none';
-  document.getElementById('imageFields').style.display = type === 'image' ? 'block' : 'none';
-  document.getElementById('videoFields').style.display = type === 'video' ? 'block' : 'none';
+const  handlePostSubmit= async (event) => {
+  event.preventDefault();
+
+  const createdBy = '64a7f3c4f1d2c8b5e6a7d8e9'; // Example user ID
+  const community = document.getElementById('community-select').value; // or set to a valid community ID if needed
+  const type = text_button.classList.contains('active') ? 'text' : 
+               image_button.classList.contains('active') ? 'image' : 
+               video_button.classList.contains('active') ? 'video' : null;
+  const formData = new FormData();
+
+  if (type === 'text') {
+     const title = document.getElementById('post-title').value;
+     const content = document.getElementById('post-content-text').value;
+
+     formData.append('title', title);
+    formData.append('content', content);  // Add file to formData
+  } else if (type === 'image') {
+    const title = document.getElementById('image-title').value;
+    const imageFile = document.getElementById('image-file').files[0];
+
+    formData.append('title', title);
+    formData.append('image-file', imageFile);  // Add file to formData
+  } else if (type === 'video') {
+    const title = document.getElementById('video-title').value;
+    const videoFile = document.getElementById('video-file').files[0];
+
+    formData.append('title', title);
+    formData.append('video-file', videoFile);  // Add file to formData
+  }
+
+  formData.append('type', type);  // Add post type
+  formData.append('createdBy', createdBy);
+  formData.append('community', community); 
+  // Log formData entries for debugging
+  for (const [key, value] of formData.entries()) {
+    console.log(`FormData: ${key} = ${value}`);
+  }
+
+  try {
+    console.log('Submitting form data to', API_BASE_URL);
+
+    const response = await fetch(API_BASE_URL, {
+      method: 'POST',
+      body: formData,
+    });
+    
+    console.log('Response status:', response.status);
+    if (!response.ok) {
+      const errorText = await response.text();
+      alert(`Wooopss...Something went wrong. ${response.status}`, errorText);
+      return;
+    } 
+      const newPost = await response.json();
+      console.log('Post created:', newPost);
+      document.getElementById('createPostModal').style.display = 'none';
+  } catch (error) {
+    console.error('Network error:', error);
+    alert('Network error: Unable to connect to server');
+  }
+
 }
-// Toggle fields on initial load
-document.addEventListener("DOMContentLoaded", function() {
-  const postTypeBtns = document.querySelectorAll('.post-type-btn');
-  const hiddenInput = document.getElementById('');
 
 
-  postTypeBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      postTypeBtns.forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      hiddenInput.value = btn.getAttribute('data-type');
-      togglePostTypeFields(); // If you want to show/hide fields
+const getPosts = async () => {
+  try {
+    const response = await fetch(API_BASE_URL);
+    const posts = await response.json();
+
+    const postList = document.getElementById('post-list');
+    postList.innerHTML = ''; 
+    posts.forEach(post => {
+      console.log('Post:', post);
+
+      const postItem = document.createElement('li');
+      postItem.textContent = `${post.title} ,${post.content}`;
+      postList.appendChild(postItem);
     });
-  });
-
-  // Handle form submission for creating a post
-  const createPost = document.getElementById('createPostForm');
-
-
-  if (createPost) {
-    createPost.addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      const formData = new FormData(createPost);
-
-      try {
-        const response = await fetch(API_BASE_URL, {
-          method: 'POST',
-          body: formData
-        });
-
-        if (response.ok) {
-          const newPost = await response.json();
-          closeCreatePostModal();
-          renderNewPost(newPost); // Render the new post in the feed
-        } else {
-          alert('Error creating post');
-        }
-      } catch (error) {
-        alert('Network error');
-      }
-    });
+    console.log('Fetched posts:', posts);
+    return posts;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    alert('Error fetching posts: ' + error.message);
   }
-});
-
-// Render the new post in the feed (customize as needed)
-function renderNewPost(post) {
-  const mainContent = document.querySelector('.main-content');
-  if (!mainContent) return;
-
-  const container = document.createElement('div');
-  container.className = 'post-container';
-
-  let postHtml = `
-    <div class="post">
-      <h6 class="post-meta">${post.createdBy?.username || 'Anonymous'} • עכשיו</h6>
-      <h5 class="post-title">${post.title || ''}</h5>
-  `;
-
-  if (post.type === 'image' && post.image?.path) {
-    postHtml += `<img class="post-image" src="/${post.image.path}" alt="Post Image">`;
-  } else if (post.type === 'video' && post.video?.path) {
-    postHtml += `<video controls class="post-video"><source src="/${post.video.path}"></video>`;
-  } else {
-    postHtml += `<div class="post-content">${post.content}</div>`;
-  }
-
-  postHtml += `
-      <div class="post-actions">
-        <button class="like-btn post-like"><i class="fas fa-arrow-up"></i> <span class="like-count">0</span></button>
-      </div>
-    </div>
-  `;
-
-  container.innerHTML = postHtml;
-  mainContent.prepend(container); // Add to top of feed
 }

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const postController = require('../controller/post');
-const Post = require('../models/post');
+// const Post = require('../models/post');
 
 // Configure multer
 const storage = multer.diskStorage({
@@ -28,11 +28,11 @@ router.route('/')
   // .get(postController.getAllPosts)
   .post(postController.createPost);
 
-router.get('/group/:groupId', postController.getPostsByGroup);
+// router.get('/group/:groupId', postController.getPostsByGroup);
 
-router.get('/my-posts', postController.getPostsByUser);
+// router.get('/my-posts', postController.getPostsByUser);
 
-router.delete('/:id', postController.deletePost);
+// router.delete('/:id', postController.deletePost);
 
 
 module.exports = router;
