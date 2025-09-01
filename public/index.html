@@ -210,34 +210,44 @@
         </div>         
 
   <!-- Create Post Modal -->
-  <div id="createPostModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+ <div id="createPostModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
     <div style="background:#fff; padding:2em; border-radius:10px; width:350px; position:relative;">
-      <button onclick="closeCreatePostModal()" style="position:absolute; top:10px; right:10px;">✖</button>
+      <button id="closePostModal" style="position:absolute; top:10px; right:10px;">✖</button>
       <h3>Create post</h3>
-
       <form id="createPostForm">
+        <div id="header" style="display:flex; align-items:center; gap:10px;">
+        </div>
+         
+          <select id="community-select">
+            <option  value="everyone">select Your Community</option>
+            <option value="Community1">Community 1</option>
+            <option value="Community2">Community 2</option>
+            <option value="Community3">Community 3</option>
+            <!--add options dynamically here-->
+          </select>
+        
         <div id="postTypeBtns" style="display: flex; gap: 10px; margin: 8px 0;">
-          <button type="button" class="post-type-btn selected" data-type="text">📝 text</button>
-          <button type="button" class="post-type-btn" data-type="image">📷 image</button>
-          <button type="button" class="post-type-btn" data-type="video">🎥 video</button>
+          <button type="button" id="post-type-text" class="post-type" data-type="text"> text</button>
+          <button type="button" id="post-type-image" class="post-type" data-type="image"> image</button>
+          <button type="button" id="post-type-video" class="post-type" data-type="video"> video</button>
         </div>
 
-        <div id="textFields">
-          <input type="text" name="title" placeholder="Title *" required style="width:100%;margin:8px 0;">
-          <textarea name="content" placeholder="write somthin..." required style="width:100%;height:100px;margin:8px 0;"></textarea>
+        <div id="text-input" style="display:none;">
+          <input type="text" id="post-title" class="form-control" name="title" placeholder="Title *" style="width:100%;margin:8px 0;">
+          <textarea id="post-content-text"  class="form-control" name="content" placeholder="what's up?..." style="width:100%;height:100px;margin:8px 0;"></textarea>
         </div>
 
-        <div id="imageFields" style="display:none;">
-          <input type="text" name="title" placeholder="Title *" required style="width:100%;margin:8px 0;">
-          <input type="text" name="image" placeholder="image link" accept="image/*" style="width:100%;margin:8px 0;">
+        <div id="image-input" style="display:none;">
+          <input type="text" id="image-title" name="image-title" placeholder="Title *" style="width:100%;margin:8px 0;">
+          <input type="file" id="image-file" name="image-file" multiple="multiple" accept="image/png, image/jpg, image/jpeg" style="width:100%;margin:8px 0;">
         </div>
       
-        <div id="videoFields" style="display:none;">
-           <input type="text" name="title" placeholder="Title *" required style="width:100%;margin:8px 0;">
-          <input type="text" name="video" placeholder="vido link" accept="video/*" style="width:100%;margin:8px 0;">
+        <div id="video-input" style="display:none;">
+           <input type="text" id="video-title" name="video-title" placeholder="Title *" style="width:100%;margin:8px 0;">
+          <input type="file" id="video-file" name="video-file" accept="video/*" style="width:100%;margin:8px 0;">
         </div>
-      
         <button type="submit" style="margin-top:1em;">submit</button>
+      
       </form>
 
     </div>

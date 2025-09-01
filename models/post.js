@@ -1,50 +1,22 @@
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ['text', 'image', 'video'],
-    required: true
-  },
-  title: {
-    type: String,
-    trim: true
-  },
-  content: {
-    type: String,
-    trim: true
-  },
-  image: {
-    filename: String,
-    mimetype: String,
-    path: String // Where the file is stored on your server
-  },
-  video: {
-    filename: String,
-    mimetype: String,
-    path: String
-  },
-  audio: {
-    filename: String,
-    mimetype: String,
-    path: String
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  group: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Group',
-    default: null
-  }
+  type: {type: String, enum: ['text', 'image', 'video'], required: true},
+  title: {type: String, trim: true},
+
+  text: {type: String, default: '', trim: true},
+  image: {type: String, default: '', trim: true},
+  video: {type: String, default: '', trim: true},
+
+  community: {type: String, default: '', trim: true},
+  createdBy: {type: String, required: true},
+  createdAt: {type: Date, default: Date.now},
+
+  likes: {type: Number, default: 0},
+  dislikes: {type: Number, default: 0},
+  comments: {type: Number, default: 0},
+  shares: {type: Number, default: 0},
 });
 
-const Post = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('Post', postSchema);
 
-module.exports = Post;
