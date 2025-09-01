@@ -30,9 +30,4 @@ router.route('/')
 
 // router.get('/group/:groupId', postController.getPostsByGroup);
 
-// router.get('/my-posts', postController.getPostsByUser);
-
-// router.delete('/:id', postController.deletePost);
-
-
 module.exports = router;

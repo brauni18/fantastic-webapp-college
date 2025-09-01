@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const usersController = require('../controller/users');
 const { createUser,
     deleteUser,
     updateUser,
@@ -22,5 +23,6 @@ router.get('/', getAllUsers);
 router.put('/password/:id', updateUserPassword);
 // Route to login a user
 router.post('/login', loginUser);
+router.post('/login', usersController.isLoggedIn);
 
 module.exports = router;
