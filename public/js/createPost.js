@@ -1,32 +1,41 @@
-
 API_BASE_URL = '/posts';
 
 // Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   // Add event listener for the create post button
-  document.getElementById('create-post-btn').addEventListener('click', function(e) {
+ const createPostBtn = document.getElementById('create-post-btn');
+  createPostBtn.addEventListener('click',async function(e) {
     e.preventDefault();
-    document.getElementById('createPostModal').style.display = 'flex';
-    selectPostType('text'); // Set default to text and set up required fields
-  });
-  
-  //add event listener for the close button
-  document.getElementById('closePostModal').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('createPostModal').style.display = 'none';
+   window.location.href = '/posts/create';
+
   });
   
   // Add form submission handler
-  document.getElementById('createPostForm').addEventListener('submit', handlePostSubmit);
+  const createPostFrom = document.getElementById('createPostForm');
+  if (createPostFrom) {
+    createPostFrom.addEventListener('submit', handlePostSubmit);
+  }
+  document.querySelectorAll('.home-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent default navigation
+      history.pushState(null, '', '/'); // Update URL without reloading
+    });
+  });
 });
 const text_button = document.getElementById('post-type-text');
 const image_button = document.getElementById('post-type-image');
 const video_button = document.getElementById('post-type-video');
 
 // Add event listeners for post type buttons
-text_button.addEventListener('click', () => selectPostType('text'));
-image_button.addEventListener('click', () => selectPostType('image'));
-video_button.addEventListener('click', () => selectPostType('video'));
+if (text_button) {
+  text_button.addEventListener('click', () => selectPostType('text'));
+}
+if (image_button) {
+  image_button.addEventListener('click', () => selectPostType('image'));
+}
+if (video_button) {
+  video_button.addEventListener('click', () => selectPostType('video'));
+}
 
 // Function to select post type and show corresponding input section
 const selectPostType = (type) => {
@@ -34,7 +43,6 @@ const selectPostType = (type) => {
   const text_input= document.getElementById('text-input');
   const image_input = document.getElementById('image-input');
   const video_input = document.getElementById('video-input');
-  
   
   // Show selected input section and mark button as active
   if (type === 'text') {
@@ -148,7 +156,6 @@ const  handlePostSubmit= async (event) => {
     } 
       const newPost = await response.json();
       console.log('Post created:', newPost);
-      document.getElementById('createPostModal').style.display = 'none';
   } catch (error) {
     console.error('Network error:', error);
     alert('Network error: Unable to connect to server');
@@ -156,25 +163,3 @@ const  handlePostSubmit= async (event) => {
 
 }
 
-
-const getPosts = async () => {
-  try {
-    const response = await fetch(API_BASE_URL);
-    const posts = await response.json();
-
-    const postList = document.getElementById('post-list');
-    postList.innerHTML = ''; 
-    posts.forEach(post => {
-      console.log('Post:', post);
-
-      const postItem = document.createElement('li');
-      postItem.textContent = `${post.title} ,${post.content}`;
-      postList.appendChild(postItem);
-    });
-    console.log('Fetched posts:', posts);
-    return posts;
-  } catch (error) {
-    console.error('Fetch error:', error);
-    alert('Error fetching posts: ' + error.message);
-  }
-}

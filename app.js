@@ -36,7 +36,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
-
+app.get('/', (req, res) => {
+  res.render('index');
+});
 //routes
 app.use('/posts', post_Router);
 app.use('/users', users_Router);

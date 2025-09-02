@@ -1,0 +1,265 @@
+:root { 
+    --color-line1--: #00c46a;
+    --color-line2--: #ffb545;
+    --color-line3--: #fe69b3; 
+    --color-line4--: #6597f2; 
+
+    --color-dark--1: #22262c;
+    --color-dark--2: #282d35;
+    --color-dark--3: #333;
+    --color-dark--4: #343a40;
+    --color-dark--5: #444444;
+
+    --color-light--1: #aaa;
+    --color-light--2: #ececec;
+    --color-light--3: rgb(214, 222, 224);
+    --color-light--4: #ccc;
+    --color-light--5: #8e8e8f;
+    --color-light--6: #ffffff;
+  }
+  /*body */
+  body {
+    background-color: var(--color-light--6);
+    
+  }
+
+ 
+/*sidebar */
+
+ #sidebar{
+  height: 93vh;
+  overflow-y: auto;
+  background-color: var(--color-light--6);
+  border-right:1px solid var(--color-light--4);
+  width: 70px; /* Default width (collapsed) */
+  transition: width 0.3s ease; /* Smooth transition for width */
+  overflow: hidden; /* Hide content that overflows */
+  white-space: nowrap; /* Prevent text wrapping */ 
+  }
+#sidebar:hover {
+  width: 250px; /* Expanded width on hover */
+}
+#sidebar .nav-link span {
+  display: none; /* Hide text by default */
+}
+
+#sidebar:hover .nav-link span {
+  display: inline; /* Show text when hovered */
+}
+
+#sidebar .nav-link i {
+  font-size: 1.2rem; /* Adjust icon size */
+  margin-right: 0; /* Remove margin when collapsed */
+  transition: text-shadow 0.3s ease; /* Smooth transition for hover effect */
+
+  border-radius: 0.375rem;
+  margin-bottom: 0.25rem;
+  color: var(--color-dark--5);
+  
+}
+
+#sidebar .nav-link:hover i {
+  text-shadow: 0 0 8px rgba(102, 194, 255, 0.902); /* Neon blue glow effect */
+  color: rgba(102, 194, 255, 0.902); /* Optional: Change icon color to blue */
+}
+
+
+#sidebar:hover .nav-link i {
+  margin-right: 10px; /* Add margin when expanded */
+}
+
+#sidebar .collapse-icon{
+  display: none;
+}
+#sidebar:hover .collapse-icon{
+  display: inline;
+  float: right;
+  margin-right: 10px;
+  font-size: 1rem;
+  
+  color: var(--color-dark--5);
+}
+.collapse-icon {
+  transition: transform 0.2s ease;
+  font-size: 0.8rem;
+}
+.sidebar-btn-text{
+  color: var(--color-dark--5);
+}
+#line-btn {
+  background-color: #343a40;  
+}
+
+#sidebar-btn-communities{
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+/* Navbar Styling */
+#navbar {
+  position: sticky;
+  top: 0;
+  margin: 0;
+  width: 100%;
+  border-bottom: 1px solid var(--color-light--4);
+  z-index: 1020;
+  padding: 0.5rem 1rem;
+}
+
+/* Three-column layout */
+#navbar .row {
+  margin: 0;
+}
+
+#navbar .col-4 {
+  padding: 0 0.5rem;
+}
+
+/* Search styling */
+#navbar .input-group {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+#navbar input {
+  border: 1px solid #495057;
+  background-color: var(--color-light--6);
+  color:var(--color-dark--5);
+  border-right: none;
+}
+
+#navbar input:focus {
+  background-color: var(--color-light--3);
+  border-color: #007bff;
+  color: white;
+  
+}
+
+#navbar input::placeholder {
+  color: #adb5bd;
+}
+
+#btn-search-icon {
+  border: 1px solid #495057;
+  border-left: none;
+  background-color: #495057;
+  color: white;
+}
+
+#btn-search-icon:hover {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+/* Header icons styling */
+.header-icons {
+  gap: 0.75rem;
+}
+
+.header-icons .nav-link {
+  color:var(--color-dark--5);
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
+}
+
+.header-icons .nav-link:hover {
+  background-color: rgba(255,255,255,0.1);
+  color: #007bff;
+  transform: translateY(-1px);
+}
+
+/* Brand styling */
+.navbar-brand {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: white !important;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  transition: all 0.3s ease;
+}
+
+/* Create post button special styling */
+.create-post-link .bi-plus-lg {
+  font-weight: bold;
+}
+
+.create-post-link:hover .bi-plus-lg {
+  color: #28a745 !important;
+}
+.post-card {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.post-card:hover {
+    border-color: #999;
+}
+
+.post-header {
+    font-size: 0.85rem;
+}
+
+.post-content img,
+.post-content video {
+    max-height: 600px;
+    width: 100%;
+    object-fit: contain; /* Use 'contain' to see the whole image/video */
+    background-color: #f0f2f5; /* A light background for letterboxing */
+}
+
+.post-footer .vote-buttons .vote-btn {
+    border: none;
+}
+
+.post-footer .vote-buttons .vote-count {
+    min-width: 25px;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  /* Stack on mobile */
+  #navbar .col-4:nth-child(2) {
+    order: 3;
+    margin-top: 0.5rem;
+  }
+  
+  #navbar .col-4:nth-child(3) {
+    order: 2;
+  }
+  
+  .header-icons {
+    gap: 0.5rem;
+  }
+  
+  .header-icons .nav-link {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Hide search on very small screens */
+  #navbar .col-4:nth-child(2) {
+    display: none !important;
+  }
+  
+  /* Make brand and icons take full width */
+  #navbar .col-4:nth-child(1),
+  #navbar .col-4:nth-child(3) {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
