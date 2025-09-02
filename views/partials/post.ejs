@@ -1,0 +1,55 @@
+<%# This check prevents errors if you try to render this partial with no post data %>
+<% if (typeof post !== 'undefined') { %>
+  <div class="card post-card mb-3" data-post-id="<%= post._id %>">
+    <div class="card-body">
+      <!-- Post Header: Community, User, and Timestamp -->
+      <div class="post-header d-flex align-items-center mb-2">
+        <% if (post.community) { %>
+          <a href="/c/<%= post.community.name %>" class="fw-bold me-2 text-decoration-none"><%= post.community.name %></a>
+          <span class="text-muted">·</span>
+        <% } %>
+        <span class="text-muted ms-2">Posted by 
+          <a href="/u/<%= post.author.username %>" class="text-decoration-none"><%= post.author.username %></a>
+        </span>
+        <!-- We'll use a placeholder for time, can be updated with JS later -->
+        <span class="text-muted ms-2"><%= new Date(post.createdAt).toLocaleDateString() %></span>
+      </div>
+
+      <!-- Post Title -->
+      <h5 class="card-title"><%= post.title %></h5>
+
+      <!-- Post Body: Content depends on the post type -->
+      <div class="post-content mb-3">
+        <% if (post.type === 'text' && post.content) { %>
+          <p class="card-text"><%= post.content %></p>
+        <% } else if (post.type === 'image' && post.imageUrl) { %>
+          <img src="<%= post.imageUrl %>" class="img-fluid rounded" alt="<%= post.title %>">
+        <% } else if (post.type === 'video' && post.videoUrl) { %>
+          <video controls class="img-fluid rounded" style="max-height: 500px;">
+            <source src="<%= post.videoUrl %>" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        <% } %>
+      </div>
+
+      <!-- Post Footer: Actions like votes and comments -->
+      <div class="post-footer d-flex align-items-center">
+        <div class="vote-buttons d-flex align-items-center border rounded p-1">
+          <button class="btn btn-sm btn-light vote-btn upvote"><i class="bi bi-arrow-up"></i></button>
+          <span class="vote-count fw-bold mx-2"><%= post.upvotes - post.downvotes %></span>
+          <button class="btn btn-sm btn-light vote-btn downvote"><i class="bi bi-arrow-down"></i></button>
+        </div>
+
+        <a href="/posts/<%= post._id %>/comments" class="btn btn-sm btn-light ms-3">
+          <i class="bi bi-chat-left-text"></i>
+          <span class="ms-1"><%= post.commentCount || 0 %> Comments</span>
+        </a>
+
+        <button class="btn btn-sm btn-light ms-3">
+          <i class="bi bi-share"></i>
+          <span class="ms-1">Share</span>
+        </button>
+      </div>
+    </div>
+  </div>
+<% } %>

@@ -15,25 +15,27 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+router.get('/create', (req, res) => {
+  res.render('createPost');
+});
 const logRequest = (req, res, next) => {
     console.log('🚦 === MIDDLEWARE HIT ===');
     console.log('🚦 Method:', req.method);
     console.log('🚦 URL:', req.originalUrl);
     console.log('🚦 Body:', req.body);
-    console.log('🚦 Files:', req.files);
-    console.log('🚦 Headers:', req.headers['content-type']);
+
     next(); // Pass control to next middleware/controller
 };
 
 router.route('/')
-  
-  .post( upload.fields([
-      { name: 'image-file', maxCount: 3 },
-      { name: 'video-file', maxCount: 3 }
-    ]),
-    logRequest,
-    postController.createPost               // POST /posts/
-  );
+.post( upload.fields([
+  { name: 'image-file', maxCount: 3 },
+  { name: 'video-file', maxCount: 3 }
+]),
+logRequest,
+postController.createPost)
+.get(postController.getAllPosts); // get posts
+
 
 // router.get('/group/:groupId', postController.getPostsByGroup);
 

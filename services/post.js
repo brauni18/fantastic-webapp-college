@@ -27,7 +27,14 @@ const createPost = async (type,title, content, createdBy, community) => {
         throw new Error('service - Failed to create post: ' + error.message);
     }
 };
-
+const getAllPosts = async () => {
+    try{
+        return await PostModel.find({});
+    } catch (error) {
+        console.error('service - Error getting all posts:', error);
+        throw new Error('service - Failed to get all posts: ' + error.message);
+    }
+};
 // Update a post by ID
 // const updatePost = async (postId, content, userId) => {
 //     try {
@@ -117,10 +124,10 @@ const createPost = async (type,title, content, createdBy, community) => {
 
 module.exports = {
     createPost,
+    getAllPosts,
     
     // updatePost,
     // getPost,
-    // getAllPosts,
     // getPostsByGroup,
     // getPostsByUser,
     // deletePost

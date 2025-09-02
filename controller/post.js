@@ -162,7 +162,10 @@ const createPost = async (req, res) => {
         });
     }
 };
-
+const getAllPosts = async (req, res) => {
+    const posts = await postService.getAllPosts();
+    res.json(posts);
+};
 // Get all posts (including posts without a group)
 // const getAllPosts = async (req, res) => {
 //     try {
@@ -218,7 +221,7 @@ const createPost = async (req, res) => {
 
 module.exports = {
     createPost,
-    // getAllPosts,
+    getAllPosts,
     // getPostsByGroup,
     // getPostsByUser,
     // deletePost
