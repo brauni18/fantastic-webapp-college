@@ -8,9 +8,8 @@ const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName:  { type: String, required: true },
   bio:      { type: String, maxlength: 300 },
-  karma:    { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
-  isAdmin:  { type: Boolean, default: false }
+//  isAdmin:  { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

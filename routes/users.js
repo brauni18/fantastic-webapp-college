@@ -25,4 +25,12 @@ router.put('/password/:id', updateUserPassword);
 router.post('/login', loginUser);
 router.post('/login', usersController.isLoggedIn);
 
+router.get('/', (req, res) => {
+  res.sendFile('login.html', { root: 'public' });
+});
+
+router.get('/users', async (req, res) => {
+    res.render('createUser');
+});
+
 module.exports = router;
