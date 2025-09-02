@@ -3,7 +3,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const mongoose = require('mongoose');
-require('dotenv').config();
+//require('dotenv').config();
+const dotenv = require('dotenv');
+
 
 const post_Router = require('./routes/post');
 const users_Router = require('./routes/users');
@@ -19,10 +21,12 @@ mongoose.connect(process.env.CONNECTION_STRING, { })
     console.error('❌ MongoDB connection error:', error);
     process.exit(1);
 });
-    
+
+dotenv.config({ path: './config/.env' });
 var app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/', userRoutes);
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.use(express.static('public'));

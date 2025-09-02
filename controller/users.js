@@ -1,17 +1,15 @@
 const userService = require('../services/users');
 
 const createUser = async (req, res) => {
-    try{
-        const userData = req.body;
-        const result = await User.create(userData);
-        res.status(201).json(result);
+     try {
+        await userService.createUser(req.body);
+        res.render('createUser', { error: null, success: 'User created successfully!' });
     } catch (error) {
         const msg = error.message || 'Internal server error';
-        
-        const status = msg === 'All fields are required' || msg === 'Username already exists'
-      ? 400 : 500;
-        console.error('Error creating user:', error);
-        res.status(status).json({ message: msg });
+        res.render('createUser', { error: msg, success: null });
+    }
+    if (success) {
+        res.redirect('/users/login');
     }
 };
 
