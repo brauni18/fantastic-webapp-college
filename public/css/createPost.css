@@ -13,74 +13,95 @@
     --color-light--1: #aaa;
     --color-light--2: #ececec;
     --color-light--3: rgb(214, 222, 224);
-    --color-light--4: #ccc;
+     --color-light--4: rgb(200, 209, 211);
     --color-light--5: #8e8e8f;
     --color-light--6: #ffffff;
   }
-/* Styles for the Create Post Page */
-.create-post-container {
-    max-width: 750px; /* Set a max-width for the form container */
-    margin: 2rem auto; /* Center the container on the page */
+  @import url('styles.css');
+  .main-col{
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    transition: margin-left 0.3s ease;
+  }
+ #createPostForm {
+    justify-content: center;
+    margin-left: 40px;
+    width: 100%;
+    max-width: 700px;
+    padding: 2rem;
+}
+#create-post-label {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-dark--3);
 }
 
-.create-post-card {
-    background-color: var(--color-light--6);
-    border: 1px solid var(--color-light--4);
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    overflow: hidden; /* Ensures the header background fits the rounded corners */
-}
-
-.create-post-card .card-header {
+#community-select {
+    margin-bottom: 1.5rem;
+    border-radius: 20px;
     background-color: var(--color-light--3);
-    font-size: 1.25rem;
-    font-weight: 600;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--color-light--4);
 }
-
-.create-post-card .card-body {
-    padding: 1.5rem;
+#community-select:hover {
+      background-color: var(--color-light--4);
+    border-color: #007bff;
+    box-shadow: 0 0 5px #007bff;
+    outline: none;
 }
-
-/* User info in the form header */
-.form-header .user-avatar img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
 /* Post type selection buttons */
-.post-type-buttons .post-type {
-    flex: 1;
-    border: 1px solid var(--color-light--4);
-    background-color: var(--color-light--3);
-    transition: all 0.2s ease-in-out;
+#post-type-text,
+#post-type-image,
+#post-type-video {
+    border:none;
+    margin-bottom: 1.2rem;
+    padding: 0.5rem 1rem;
+    margin-right: 1.5rem;
+    background-color: var(--color-light--6);
+    color: var(--color-dark--3);
+    font-size: 1.2rem;
+    cursor: pointer;
 }
-
-.post-type-buttons .post-type:hover {
+#post-type-text:hover,
+#post-type-image:hover,
+#post-type-video:hover {
     background-color: var(--color-light--2);
-}
+    border-radius: 20px;
+    box-shadow: 0 0 5px  #ff7a50;
+    outline: none;
 
-.post-type-buttons .post-type.active {
-    background-color: var(--color-line1--);
-    color: white;
-    border-color: var(--color-line1--);
 }
-
+#post-type-text:focus,
+#post-type-image:focus,
+#post-type-video:focus {
+    border-bottom: #ff7a50 solid 1px;
+}
+/*text area styling */
+#post-title,
+#image-title,
+#video-title {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    background-color: var(--color-light--6);
+    border: 1px solid var(--color-light--3);
+    padding: 0.75rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
 /* File Upload Styling */
 .file-upload-wrapper {
     border: 2px dashed var(--color-light--4);
     border-radius: 5px;
     padding: 2rem;
+    width: 100%;
     text-align: center;
     cursor: pointer;
     transition: border-color 0.2s, background-color 0.2s;
 }
 
 .file-upload-wrapper:hover {
-    border-color: var(--color-line1--);
+    border-color:  #ff7a50;
     background-color: var(--color-light--2);
 }
 
@@ -104,7 +125,16 @@
 
 /* Submit Button */
 .submit-button {
+    border: none;
+    width: 20%;
+    border-radius: 20px;
     font-size: 1.1rem;
     font-weight: 500;
     padding: 0.75rem;
+    background-color: var(--color-light--6);
+}
+.submit-button:hover {
+   background-color: var(--color-light--2);
+    box-shadow: 0 0 5px #ff7a50;
+    outline: none;
 }

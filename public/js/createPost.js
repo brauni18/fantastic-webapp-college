@@ -17,8 +17,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   document.querySelectorAll('.home-link').forEach(link => {
     link.addEventListener('click', (e) => {
-      e.preventDefault(); // Prevent default navigation
-      history.pushState(null, '', '/'); // Update URL without reloading
+      window.location.href = '/';
     });
   });
 });
@@ -156,10 +155,11 @@ const  handlePostSubmit= async (event) => {
     } 
       const newPost = await response.json();
       console.log('Post created:', newPost);
+      // Redirect to home or posts page after successful creation
+      window.location.href = '/';
   } catch (error) {
     console.error('Network error:', error);
     alert('Network error: Unable to connect to server');
   }
 
 }
-

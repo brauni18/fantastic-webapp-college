@@ -11,9 +11,9 @@
     --color-dark--5: #444444;
 
     --color-light--1: #aaa;
-    --color-light--2: #ececec;
+    --color-light--2: #f1f1f1;
     --color-light--3: rgb(214, 222, 224);
-    --color-light--4: #ccc;
+    --color-light--4: rgb(200, 209, 211);
     --color-light--5: #8e8e8f;
     --color-light--6: #ffffff;
   }
@@ -23,10 +23,19 @@
     
   }
 
- 
+  #main-content {
+    margin-left: 40px;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    transition: margin-left 0.3s ease;
+
+   
+}
 /*sidebar */
 
- #sidebar{
+ #sidebar {
+  position: fixed;
   height: 93vh;
   overflow-y: auto;
   background-color: var(--color-light--6);
@@ -34,7 +43,10 @@
   width: 70px; /* Default width (collapsed) */
   transition: width 0.3s ease; /* Smooth transition for width */
   overflow: hidden; /* Hide content that overflows */
-  white-space: nowrap; /* Prevent text wrapping */ 
+  white-space: nowrap; /* Prevent text wrapping */
+  scrollbar-width: thin; 
+  scrollbar-color: var(--color-light--4) var(--color-light--6); 
+  
   }
 #sidebar:hover {
   width: 250px; /* Expanded width on hover */
@@ -97,6 +109,7 @@
 
 /* Navbar Styling */
 #navbar {
+  background-color: var(--color-light--6);
   position: sticky;
   top: 0;
   margin: 0;
@@ -117,40 +130,56 @@
 
 /* Search styling */
 #navbar .input-group {
-  border-radius: 20px;
   overflow: hidden;
+
+}
+#navbar .input-group:hover input,
+#navbar .input-group:hover #btn-search-icon {
+  background-color: var(--color-light--4);
+  border-color: #007bff;
+}
+#navbar input:focus {
+  background-color: var(--color-light--4);
+  border-color: #007bff;
+  color: var(--color-dark--5); /* Changed from white to match theme */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-#navbar input {
-  border: 1px solid #495057;
-  background-color: var(--color-light--6);
-  color:var(--color-dark--5);
+/* When input is focused, also style the button */
+#navbar input:focus + #btn-search-icon {
+  background-color: var(--color-light--4);
+  border-color: #007bff;
   border-right: none;
 }
 
-#navbar input:focus {
+#navbar input {
+  border: 1px solid var(--color-light--3);
+  border-radius: 20px 0 0 20px;
   background-color: var(--color-light--3);
-  border-color: #007bff;
-  color: white;
-  
+  color:var(--color-dark--5);
+  border-right: none;
+  transition: all 0.3s ease;
 }
+
 
 #navbar input::placeholder {
   color: #adb5bd;
 }
 
 #btn-search-icon {
-  border: 1px solid #495057;
+  border: 1px solid var(--color-light--3);
+  border-radius: 0 20px 20px 0;
   border-left: none;
-  background-color: #495057;
-  color: white;
+  background-color: var(--color-light--3);
+  color: var(--color-dark--5);
+  transition: all 0.3s ease;
 }
 
-#btn-search-icon:hover {
-  background-color: #007bff;
+/* #btn-search-icon:hover {
+  background-color: var(--color-light--3);
   border-color: #007bff;
-  color: white;
-}
+  color: var(--color-dark--5);
+} */
 
 /* Header icons styling */
 .header-icons {
@@ -197,13 +226,17 @@
   color: #28a745 !important;
 }
 .post-card {
-    border: 1px solid #ccc;
-    background-color: #fff;
-    transition: border-color 0.2s ease-in-out;
+  padding: 1rem;
+    max-width: 800px;
+   margin: 0 auto 1rem auto;
+    border:none;
+    background-color:var(--color-light--6);
+    transition: background-color 0.2s ease-in-out;
 }
 
 .post-card:hover {
-    border-color: #999;
+    
+    background-color: var(--color-light--2);
 }
 
 .post-header {
@@ -226,7 +259,11 @@
     min-width: 25px;
     text-align: center;
 }
-
+#post-list li:not(:last-child) {
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
   /* Stack on mobile */
