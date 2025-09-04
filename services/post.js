@@ -3,9 +3,9 @@ const PostModel = require('../models/post');
 
 
 // Create a new post
-const createPost = async (type,title, content, createdBy, community) => {
+const createPost = async (type,title, createdBy, community, content,imageUrl,videoUrl) => {
     try {
-        console.log(' in service Creating post with:', title, content, createdBy, community);
+        console.log(' in service Creating post with:', title, createdBy, community,content,imageUrl,videoUrl);
 
         // Explicitly set the current date/time
         const now = new Date();
@@ -14,7 +14,9 @@ const createPost = async (type,title, content, createdBy, community) => {
         const newPost = new PostModel({
             type: type,
             title: title,
-            content: content,
+            content: content || '',
+            imageUrl: imageUrl || '',
+            videoUrl: videoUrl || '',
             createdBy: createdBy,
             community: community,
             createdAt: now
@@ -27,6 +29,7 @@ const createPost = async (type,title, content, createdBy, community) => {
         throw new Error('service - Failed to create post: ' + error.message);
     }
 };
+
 const getAllPosts = async () => {
     try{
         return await PostModel.find({});
@@ -67,18 +70,6 @@ const getAllPosts = async () => {
 // };
 
 // // Get all posts
-// const getAllPosts = async () => {
-//     try {
-//         const posts = await Post.find()
-//             .populate('createdBy', 'username')
-//             .populate('group', 'name')
-//             .sort({ createdAt: -1 });
-//         return posts;
-//     } catch (error) {
-//         console.error('Error getting all posts:', error);
-//         throw error;
-//     }
-// };
 
 // // Get posts by group ID
 // const getPostsByGroup = async (groupId) => {
@@ -124,11 +115,5 @@ const getAllPosts = async () => {
 
 module.exports = {
     createPost,
-    getAllPosts,
-    
-    // updatePost,
-    // getPost,
-    // getPostsByGroup,
-    // getPostsByUser,
-    // deletePost
+    getAllPosts
 };

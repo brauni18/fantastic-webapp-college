@@ -114,45 +114,38 @@ const createPost = async (req, res) => {
            });
         }
         // Step 3: Extract validated data
-        const { type, title, createdBy, community } = req.body;
+        const { type, title, content, createdBy, community } = req.body;
 
         // Step 4: Create post based on type
-        let post;
+        let postData = {
+            type,
+            title,
+            community: community || null,
+            createdBy,
+        };
         
-        if (type === 'text') {
-            const { content } = req.body;
-            post = await postService.createPost(type,title, content, createdBy, community);
-            
+       if (type === 'text') {
+        postData.content = content;
         } else if (type === 'image') {
-
             const imageFile = req.files && req.files['image-file'] ? req.files['image-file'][0] : null;
-            const imageData = {
-                filename: imageFile.filename,
-                originalname: imageFile.originalname,
-                mimetype: imageFile.mimetype,
-                path: imageFile.path,
-                size: imageFile.size
-            };
-            
-            
-            post = await postService.createPost(type, title, JSON.stringify(imageData), createdBy, community);
-
+            postData.imageUrl = imageFile ? `/uploads/${imageFile.filename}` : null;
         } else if (type === 'video') {
-            const videoFile = req.files && req.files['video-file'] ? req.files['video-file'][0] : null; 
-          
-            const videoData = {
-                filename: videoFile.filename,
-                originalname: videoFile.originalname,
-                mimetype: videoFile.mimetype,
-                path: videoFile.path,
-                size: videoFile.size
-            };
+            const videoFile = req.files && req.files['video-file'] ? req.files['video-file'][0] : null;
+            postData.videoUrl = videoFile ? `/uploads/${videoFile.filename}` : null;
+        }
+        console.log('🚦 Post data being sent to service:', postData);
 
-                post = await postService.createPost(type, title, JSON.stringify(videoData), createdBy, community);
-            }
-        
-        console.log('✅ controller - Post created successfully:', post);
-        res.status(201).json(post);
+        const newpost = await postService.createPost(
+            postData.type,
+            postData.title, 
+            postData.createdBy, 
+            postData.community,
+            postData.content || '', 
+            postData.imageUrl || '',
+            postData.videoUrl || ''
+        );
+        console.log('✅ controller - Post created successfully:', newpost);
+        res.status(201).json(newpost);
         
     } catch (err) {
         console.error('❌ controller - Error in createPost:', err);
@@ -166,63 +159,8 @@ const getAllPosts = async (req, res) => {
     const posts = await postService.getAllPosts();
     res.json(posts);
 };
-// Get all posts (including posts without a group)
-// const getAllPosts = async (req, res) => {
-//     try {
-//         const posts = await postService.getAllPosts();
-//         res.json(posts);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
-// // Get posts by group ID
-// const getPostsByGroup = async (req, res) => {
-//     try {
-//         const { groupId } = req.params;
-//         const posts = await postService.getPostsByGroup(groupId);
-//         res.json(posts);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
-// // Get all posts created by the current user
-// const getPostsByUser = async (req, res) => {
-//     try {
-//         if (!req.user) {
-//             return res.status(401).json({ error: "User not logged in" });
-//         }
-//         const posts = await postService.getPostsByUser(req.user._id);
-//         res.json(posts);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
-// // Delete a post (only by the creator)
-// const deletePost = async (req, res) => {
-//     try {
-//         if (!req.user) {
-//             return res.status(401).json({ error: "User not logged in" });
-//         }
-//         const { postId } = req.params;
-//         const result = await postService.deletePost(postId, req.user._id);
-//         res.json(result);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
-// exports.renderHomePage = async (req, res) => {
-//   const posts = await Post.find().populate('createdBy', 'username').sort({ createdAt: -1 });
-//   res.render('home', { posts }); // Renders views/home.ejs
-// };
 
 module.exports = {
     createPost,
-    getAllPosts,
-    // getPostsByGroup,
-    // getPostsByUser,
-    // deletePost
+    getAllPosts
 };

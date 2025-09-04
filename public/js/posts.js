@@ -3,8 +3,18 @@ API_BASE_URL = '/posts';
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', async function() {
    await getPosts();
+
   // Add event listener for the create post button
  const createPostBtn = document.getElementById('create-post-btn');
+ const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('main-content');
+  
+  sidebar.addEventListener('mouseenter', function() {
+            mainContent.style.marginLeft = '250px';
+        });
+  sidebar.addEventListener('mouseleave', function() {
+            mainContent.style.marginLeft = '70px';
+        });
   createPostBtn.addEventListener('click',async function(e) {
     e.preventDefault();
    window.location.href = '/posts/create';
@@ -59,13 +69,13 @@ const getPosts = async () => {
 }
 
 function createPostElement(post) {
-    const postDiv = document.createElement('div');
-    postDiv.className = 'card post-card mb-3';
-    postDiv.dataset.postId = post._id;
+    const postitem = document.createElement('li');
+    postitem.className = 'card post-card mb-3';
+    
 
     // Safely access nested properties
-    const communityName = post.community ? post.community.name : '';
-    const authorName = post.author ? post.author.username : 'Anonymous';
+    const communityName = post.community ? post.community : 'everyone';
+    const authorName = post.createdBy ? post.createdBy : 'me_gusta_hacker_776';
 
     let contentHtml = '';
     if (post.type === 'text' && post.content) {
@@ -76,27 +86,56 @@ function createPostElement(post) {
         contentHtml = `<video controls class="img-fluid rounded"><source src="${post.videoUrl}" type="video/mp4"></video>`;
     }
 
-    postDiv.innerHTML = `
-        <div class="card-body">
+    postitem.innerHTML = `
+        <div id="post-${post._id}" class="card-body">
             <div class="post-header d-flex align-items-center mb-2" style="font-size: 0.85rem;">
-                ${communityName ? `<a href="/c/${communityName}" class="fw-bold me-2 text-decoration-none">${communityName}</a><span class="text-muted">·</span>` : ''}
-                <span class="text-muted ms-2">Posted by <a href="/u/${authorName}" class="text-decoration-none">${authorName}</a></span>
+                <a href="/c/${communityName}" class="fw-bold me-2 text-decoration-none">${communityName}</a><span class="text-muted">·</span> 
                 <span class="text-muted ms-2">${new Date(post.createdAt).toLocaleDateString()}</span>
-            </div>
+                </div>
+                <div>
+                <span class="text-muted ms-2"><a href="/u/${authorName}" class="text-decoration-none">${authorName}</a></span>
+                </div>
             <h5 class="card-title">${post.title}</h5>
             <div class="post-content mb-3">${contentHtml}</div>
             <div class="post-footer d-flex align-items-center">
                 <div class="vote-buttons d-flex align-items-center border rounded p-1">
-                    <button class="btn btn-sm btn-light vote-btn upvote"><i class="bi bi-arrow-up"></i></button>
-                    <span class="vote-count fw-bold mx-2">${(post.upvotes || 0) - (post.downvotes || 0)}</span>
-                    <button class="btn btn-sm btn-light vote-btn downvote"><i class="bi bi-arrow-down"></i></button>
+                    <button id="like-btn-${post._id}" class="btn btn-sm btn-light vote-btn like-btn"><i class="bi bi-arrow-up"></i></button>
+                    <span class="vote-count fw-bold mx-2">${(post.likes || 0) - (post.dislikes || 0)}</span>
+                    <button id="dislike-btn-${post._id}" class="btn btn-sm btn-light vote-btn dislike-btn"><i class="bi bi-arrow-down"></i></button>
                 </div>
                 <a href="/posts/${post._id}/comments" class="btn btn-sm btn-light ms-3">
                     <i class="bi bi-chat-left-text"></i> <span class="ms-1">${post.commentCount || 0} Comments</span>
                 </a>
+                <a href="/posts/${post._id}/shares" class="btn btn-sm btn-light ms-3">
+                    <i class="bi bi-share"></i> <span class="ms-1">${post.shareCount || 0} Shares</span>
+                </a>
             </div>
         </div>
     `;
-    return postDiv;
+
+    return postitem;
+  }
+}
+
+const likeBtn = document.querySelector(`#post-${postId}.like-btn`);
+
+likeBtn.addEventListener('click', async () => {
+  await sendLikeRequest(postId);
+  await getPosts(); // Refresh posts to update like count
+  //if user clicked like the color also change
+  likeBtn.classList.add('btn-primary');
+});
+const sendLikeRequest = async (postId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/${postId}/likes`, {
+      method: 'POST',
+     
+    });
+    if (!response.ok) {
+      throw new Error('Failed to like post');
+    }
+  } catch (error) {
+    console.error('Error liking post:', error);
+    alert('Error liking post: ' + error.message);
   }
 }

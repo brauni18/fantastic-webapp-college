@@ -6,8 +6,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <!-- Use absolute paths for CSS so they work on any route -->
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
 
   <title>navbar - Leylit</title>
 </head>
@@ -18,9 +17,9 @@
       
       <!-- Left Column: Brand -->
       <div class="col-4">
-        <a class="home-link d-flex align-items-center">
-          <img id="light-logo" src="/images/Leylit.png" class="navbar-logo light-logo me-2" height="30">
-          <img id="dark-logo" src="/images/LeylitDM.png" class="navbar-logo dark-logo me-2" height="30" hidden>
+        <a href="/" class="home-link d-flex align-items-center text-decoration-none">
+          <img id="light-logo" src="/images/Leylit.png" class="navbar-logo light-logo me-2" height="40">
+          <img id="dark-logo" src="/images/LeylitDM.png" class="navbar-logo dark-logo me-2" height="40" hidden>
           <span class="sidebar-btn-text">Leylit</span>
         </a>
       </div>
@@ -42,9 +41,6 @@
         <div class="header-icons d-flex align-items-center">
           <a href="" class="nav-link create-post-link" title="Create Post">
             <i id="create-post-btn" class="create-post-btn bi bi-plus-lg fs-5"></i>
-          </a>
-          <a href="#" class="nav-link" title="Popular">
-            <i class="bi bi-fire fs-5"></i>
           </a>
           <a href="#" class="nav-link" title="Messages">
             <i class="bi bi-chat-dots fs-5"></i>
