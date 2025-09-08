@@ -1,4 +1,3 @@
-const { get } = require('mongoose');
 const postService = require('../services/post');
 
 // Validation functions - these return error messages or null
