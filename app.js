@@ -8,6 +8,7 @@ const session = require('express-session');
 const userRoutes = require('./routes/users');
 const post_Router = require('./routes/post');
 const groupRoutes = require('./routes/group');
+const statisticsRouter = require('./routes/statistics');
 
 dotenv.config({ path: './config/.env' });
 
