@@ -1,120 +1,111 @@
 const userService = require('../services/users');
 
+function isLoggedIn(req, res, next) {
+    if (req.session.user) {
+        return next();
+    }
+    res.redirect('/login');
+}
+
+function foo(req, res) {
+    res.render("index", { username: req.session.username });
+}
+
+function loginForm(req, res) {
+    res.render("login", {});
+}
+
+function registerForm(req, res) {
+    res.render("register", {});
+}
+
+function logout(req, res) {
+    req.session.destroy(() => {
+        res.redirect('/login');
+    });
+}
+
+function profile(req, res) {
+    res.render("profile", { username: req.session.user });
+}
+
 const createUser = async (req, res) => {
-     try {
+    try {
         await userService.createUser(req.body);
-        res.render('createUser', { error: null, success: 'User created successfully!' });
+        res.redirect('/login'); // Redirect to login page after successful registration
     } catch (error) {
         const msg = error.message || 'Internal server error';
-        res.render('createUser', { error: msg, success: null });
-    }
-    if (success) {
-        res.redirect('/users/login');
+        res.render('register', { error: msg, success: null });
     }
 };
+
+
+const loginUser = async (req, res) => {
+    const { identifier, password } = req.body; // identifier can be username or email
+        // Pass identifier as both username and email to service
+        const user = await userService.loginUser({ username: identifier, email: identifier, password });
+        if (user) {
+            req.session.user = user; // Save to session after authentication
+            res.redirect('/feed');
+         } 
+         else {
+            res.redirect('/login?error=username+or+password+is+incorrect');
+        }    
+};
+
+
+const updateUser = async (req, res) => {
+    try {
+        await userService.updateUser({ ...req.body, username: req.session.user.username, newUsername: req.body.username });
+        res.redirect('/feed'); // Redirect to homepage after successful update
+    } catch (error) {
+        const msg = error.message || 'Internal server error';
+        res.render('profile', { error: msg, username: req.session.username });
+    }
+};
+
 
 const deleteUser = async (req, res) => {
     try {
-        const { userId } = req.body;
-        const result = await userService.deleteUser(userId);
-        res.status(200).json(result);
-    } catch (error) {
+        await userService.deleteUser(req.session.user.username);
+        res.redirect('/login?success=User+has+been+deleted'); // Redirect to login page with success message
+    }
+    catch (error) {
         const msg = error.message || 'Internal server error';
-        const status = msg === 'User ID is required' || msg === 'User not found'
-            ? 400 : 500;
-        console.error('Error deleting user:', error);
-        res.status(status).json({ message: msg });
+        res.render('profile', { error: msg, username: req.session.username });
     }
 };
 
-const updateUser = async (req, res) => {
-    try { 
-        const result = await userService.updateUser(req.body);
-        res.status(200).json(result);
-    } catch (error) {
-        const msg = error.message || 'Internal server error';
-        const status = msg === 'All fields are required' || msg === 'User not found'
-            ? 400 : 500;
-            console.error('Error updating user:', error);
-        res.status(status).json({ message: msg });
-    }
-};
-        
-const updateUserPassword = async (req, res) => {
-    try {
-        const { userId, newPassword } = req.body;
-        if (!userId || !newPassword) {
-            return res.status(400).json({ message: 'User ID and new password are required' });
-        }
-        const result = await userService.updateUserPassword(userId, newPassword);
-        res.status(200).json(result);
-    } catch (error) {
-        const msg = error.message || 'Internal server error';
-        const status = msg === 'User not found' || msg === 'User ID and new password are required'
-            ? 400 : 500;
-        console.error('Error updating user password:', error);
-        res.status(status).json({ message: msg });
-    }
-};
+
 const getUser = async (req, res) => {
     try {
-        const userId = req.params.id;
-        const user = await User.findById(userId).select('-password');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json(user);
+        const user = await userService.getUser(req.params.username);
+        res.render('/checkForGetUserAndGetUsers', { user }); // or res.json(user)
     } catch (error) {
-        const msg = error.message || 'Internal server error';
-        const status = msg === 'User not found' || msg === 'User ID is required'
-            ? 400 : 500;
-        console.error('Error fetching user:', error);
-        res.status(status).json({ message: msg });
+        res.status(404).send(error.message);
     }
 };
 
-    
 const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select('-password');
-        res.status(200).json(users);
+        const users = await userService.getAllUsers();
+        res.render('/checkForGetUserAndGetUsers', { users }); // or res.json(users) for API
     } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).send(error.message);
     }
-};
-
-const loginUser = async (req, res) => {
-    try {
-        const {username, password} = req.body;
-        const result = await userService.loginUser(username, password);
-        res.status(200).json(result);
-    } catch (error) {
-        const msg = error.message || 'Internal server error';
-        const status = msg === 'Username and password are required' || msg === 'Invalid username or password'
-            ? 400 : 500;
-        console.error('Error logging in:', error);
-        res.status(status).json({ message: msg });
-    }
-};
-
-const isLoggedIn = (req, res, next) => {
-    if (req.session.userId != null) {
-        return next();
-    }
-    // res.status(401).json({ message: 'Unauthorized' });
-    res.redirect('/users');
 };
 
 module.exports = {
-    userService, 
-    createUser, 
-    deleteUser, 
-    updateUser,
-    updateUserPassword, 
-    getUser, 
-    getAllUsers,
+    createUser,
     loginUser,
-    isLoggedIn 
+    isLoggedIn,
+    loginForm,
+    foo,
+    registerForm,
+    logout,
+    profile,
+    updateUser,
+    deleteUser,
+    getUser,
+    getAllUsers
 };
-

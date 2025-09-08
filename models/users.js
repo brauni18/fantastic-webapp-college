@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
   lastName:  { type: String, required: true },
   bio:      { type: String, maxlength: 300 },
   createdAt: { type: Date, default: Date.now },
-//  isAdmin:  { type: Boolean, default: false }
+  groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
+  // isAdmin:  { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

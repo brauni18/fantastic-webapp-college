@@ -1,36 +1,38 @@
 const express = require('express');
 const router = express.Router();
-const usersController = require('../controller/users');
-const { createUser,
-    deleteUser,
-    updateUser,
-    updateUserPassword,
-    getUser,
-    getAllUsers,
-    loginUser } = require('../controller/users');
 
-// Route to create a new user
-router.post('/', createUser);
-// Route to delete a user
-router.delete('/:id', deleteUser);
-// Route to update user details
-router.put('/:id', updateUser);
-// Route to get user details (optional, not in original code)
-router.get('/:id', getUser);
-// Route to get all users (optional, not in original code)
-router.get('/', getAllUsers);
-// Route to update user password
-router.put('/password/:id', updateUserPassword);
-// Route to login a user
-router.post('/login', loginUser);
-router.post('/login', usersController.isLoggedIn);
+const userController = require('../controllers/users');
+const userService = require('../services/users');
 
-router.get('/', (req, res) => {
-  res.sendFile('login.html', { root: 'public' });
+router.get('/register', userController.registerForm);
+router.post('/register', userController.createUser);
+
+router.get('/login', userController.loginForm);
+router.post('/login', userController.loginUser);
+
+router.get('/home', userController.logout);
+
+router.get('/', userController.isLoggedIn, userController.foo);
+
+router.get('/profile', userController.isLoggedIn, userController.profile);
+router.post('/update-profile', userController.isLoggedIn, userController.updateUser);
+
+router.post('/users/delete', userController.deleteUser);
+
+router.get('/checkForGetUserAndGetUsers', async (req, res) => {
+    try {
+        // Use query username or fallback to logged-in user's username
+        const username = req.query.username || (req.session.user && req.session.user.username);
+        let user = null;
+        if (username) {
+            user = await userService.getUser(username);
+        }
+        const users = await userService.getAllUsers();
+    res.render('checkForGetUserAndGetUsers', { user, users, currentUser: req.session.user });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
-
-router.get('/users', async (req, res) => {
-    res.render('createUser');
-});
+    
 
 module.exports = router;
