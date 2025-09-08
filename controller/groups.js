@@ -1,92 +1,122 @@
-const groupService = require('../services/groupService');
+const groupService = require('../services/group');
+const postService = require('../services/post');
+// Validation functions
+const checkGroupName = (name) => {
+    if (!name || name.trim() === '') {
+        return 'Group name is required';
+    }
+    if (name.length > 50) {
+        return 'Group name exceeds maximum length of 50 characters';
+    }
+    return null;
+};
 
-// Create a new group
-const createGroup = async (req, res) => {
-  try {
+const checkDescription = (description) => {
+    if (description && description.length > 200) {
+        return 'Description exceeds maximum length of 200 characters';
+    }
+    return null;
+};
+
+const validateGroupData = (req) => {
+    const errors = [];
     const { name, description } = req.body;
-
-    // Call service to create a group
-    const group = await groupService.createGroup(name, description, req.user._id);
-    res.status(201).json(group);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+    
+    const nameError = checkGroupName(name);
+    if (nameError) {
+        errors.push(nameError);
+    }
+    
+    const descError = checkDescription(description);
+    if (descError) {
+        errors.push(descError);
+    }
+    
+    if (errors.length > 0) {
+        return errors;
+    } else {
+        return true;
+    }
 };
-
-// Get all groups
+const createGroup = async (req, res) => {
+    try {
+        console.log('📝 controller - Creating group - Request body:', req.body);
+        
+        // Step 1: Validate the data
+        const validation = validateGroupData(req);
+        
+        // Step 2: If validation fails, return errors
+        if (validation !== true) {
+            console.log('❌ controller - Validation errors:', validation);
+            return res.status(400).json({ 
+                error: 'Validation failed', 
+                details: validation
+            });
+        }
+        
+        // Step 3: Extract validated data
+        const { name, description, createdBy } = req.body;
+        const newGroup = await groupService.createGroup(name, description, createdBy);
+        
+        console.log('✅ controller - Group created successfully:', newGroup);
+        res.status(201).json({
+            success: true,
+            group: newGroup,
+            message: 'Group created successfully!'
+        });
+        
+    } catch (err) {
+        console.error('❌ controller - Error in createGroup:', err);
+        return res.status(500).json({ 
+            error: 'Internal server error', 
+            details: err.message 
+        });
+    }
+};
 const getAllGroups = async (req, res) => {
-  try {
-    const groups = await groupService.getAllGroups();
-    res.json(groups);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        console.log('📝 controller - Fetching all groups');
+        const groups = await groupService.getAllGroups();
+        res.status(200).json({
+            success: true,
+            groups
+        });
+    } catch (err) {
+        console.error('❌ controller - Error in getAllGroups:', err);
+        return res.status(500).json({
+            error: 'Internal server error',
+            details: err.message
+        });
+    }
+};
+const getGroupPage = async (req, res) => {
+    try {
+        const groupId = req.params.id;
+        const group = await groupService.getGroupById(groupId);
+
+        if (!group) {
+            return res.status(404).render('404'); // Or a custom 'group not found' page
+        }
+
+        const posts = await postService.getPostsByCommunity(groupId);
+
+        res.render('groupPage', { 
+            group: group, 
+            posts: posts,
+            user: req.user // Pass user for navbar/sidebar logic
+        });
+
+    } catch (err) {
+        console.error('❌ controller - Error in getGroupPage:', err);
+        return res.status(500).json({
+            error: 'Internal server error',
+            details: err.message
+        });
+    }
 };
 
-// Get group by ID
-const getGroupById = async (req, res) => {
-  try {
-    const group = await groupService.getGroupById(req.params.id);
-    if (!group) return res.status(404).json({ error: 'Group not found' });
-    res.json(group);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// Get all groups (used for views – returns data only, no res.json)
-const getAllGroupsDirect = async () => {
-  return await groupService.getAllGroups();
-};
-
-// Join a group
-const joinGroup = async (req, res) => {
-  try {
-    const group = await groupService.joinGroup(req.params.id, req.user._id);
-    res.json({ message: 'Joined group successfully', group });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Leave a group
-const leaveGroup = async (req, res) => {
-  try {
-    const group = await groupService.leaveGroup(req.params.id, req.user._id);
-    res.json({ message: 'Left group successfully', group });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Delete a group (only if user is the creator)
-const deleteGroup = async (req, res) => {
-  try {
-    await groupService.deleteGroup(req.params.id, req.user._id);
-    res.json({ message: 'Group deleted successfully' });
-  } catch (err) {
-    res.status(403).json({ error: err.message });
-  }
-};
-
-// Update group details
-const updateGroup = async (req, res) => {
-  try {
-    const group = await groupService.updateGroup(req.params.id, req.user._id, req.body);
-    res.json(group);
-  } catch (err) {
-    res.status(403).json({ error: err.message });
-  }
-};
-
-// Export all controller functions
 module.exports = {
-  createGroup,
-  getAllGroups,
-  getAllGroupsDirect,
-  getGroupById,
-  joinGroup,
-  leaveGroup,
-  deleteGroup,
-  updateGroup
+    createGroup,
+    getAllGroups,
+    getGroupPage
 };
