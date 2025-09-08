@@ -227,6 +227,53 @@ const getPostsByCommunityName = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+const deletePost = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const result = await postService.deletePost(id);
+        
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+        
+        // ✅ Make sure to send JSON response
+        res.json({ message: 'Post deleted successfully', deletedCount: result.deletedCount });
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+const updatePost = async (req, res) => {
+    try {
+        console.log('Update request received:', req.params, req.body);
+        
+        const { id } = req.params;
+        const { title, content } = req.body;
+        
+        // Simple validation
+        if (!title || title.trim() === '') {
+            return res.status(400).json({ error: 'Title is required' });
+        }
+        
+        const updatedPost = await postService.updatePost(id, { 
+            title: title.trim(), 
+            content: content.trim() 
+        });
+        
+        if (!updatedPost) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+        
+        console.log('Post updated successfully:', updatedPost);
+        res.json(updatedPost);
+        
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -234,5 +281,7 @@ module.exports = {
     addComment,
     getPostsByCommunityName,
     getPostsByCommunity,
-    getCommentsByPostId
+    getCommentsByPostId,
+    deletePost,
+    updatePost
 };
