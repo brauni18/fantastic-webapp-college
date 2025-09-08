@@ -3,17 +3,17 @@ const postService = require('../services/post');
 // Validation functions
 const checkGroupName = (name) => {
     if (!name || name.trim() === '') {
-        return 'Group name required';
+        return 'Group name is required';
     }
     if (name.length > 50) {
-        return 'Group name exceeds max length (50)';
+        return 'Group name exceeds maximum length of 50 characters';
     }
     return null;
 };
 
 const checkDescription = (description) => {
     if (description && description.length > 200) {
-        return 'Description exceeds max (200)';
+        return 'Description exceeds maximum length of 200 characters';
     }
     return null;
 };
@@ -40,47 +40,51 @@ const validateGroupData = (req) => {
 };
 const createGroup = async (req, res) => {
     try {
-        console.log('controller creating groups request body', req.body);
+        console.log('📝 controller - Creating group - Request body:', req.body);
         
+        // Step 1: Validate the data
         const validation = validateGroupData(req);
+        
+        // Step 2: If validation fails, return errors
         if (validation !== true) {
-            console.log('controller error validating', validation);
+            console.log('❌ controller - Validation errors:', validation);
             return res.status(400).json({ 
                 error: 'Validation failed', 
                 details: validation
             });
         }
         
+        // Step 3: Extract validated data
         const { name, description, createdBy } = req.body;
         const newGroup = await groupService.createGroup(name, description, createdBy);
         
-        console.log('controller group created', newGroup);
+        console.log('✅ controller - Group created successfully:', newGroup);
         res.status(201).json({
             success: true,
             group: newGroup,
-            message: 'Group created success'
+            message: 'Group created successfully!'
         });
         
     } catch (err) {
-        console.error('controller error createGroup:', err);
+        console.error('❌ controller - Error in createGroup:', err);
         return res.status(500).json({ 
-            error: 'INTERNAL SERVER ERROR', 
+            error: 'Internal server error', 
             details: err.message 
         });
     }
 };
 const getAllGroups = async (req, res) => {
     try {
-        console.log('controller fetching groups');
+        console.log('📝 controller - Fetching all groups');
         const groups = await groupService.getAllGroups();
         res.status(200).json({
             success: true,
             groups
         });
     } catch (err) {
-        console.error('controller error getAllGroups:', err);
+        console.error('❌ controller - Error in getAllGroups:', err);
         return res.status(500).json({
-            error: 'INTERNAL SERVER ERROR',
+            error: 'Internal server error',
             details: err.message
         });
     }
@@ -91,7 +95,7 @@ const getGroupPage = async (req, res) => {
         const group = await groupService.getGroupById(groupId);
 
         if (!group) {
-            return res.status(404).render('404');
+            return res.status(404).render('404'); // Or a custom 'group not found' page
         }
 
         const posts = await postService.getPostsByCommunity(groupId);
@@ -99,13 +103,13 @@ const getGroupPage = async (req, res) => {
         res.render('groupPage', { 
             group: group, 
             posts: posts,
-            user: req.user
+            user: req.user // Pass user for navbar/sidebar logic
         });
 
     } catch (err) {
-        console.error('controller error getGroupPage:', err);
+        console.error('❌ controller - Error in getGroupPage:', err);
         return res.status(500).json({
-            error: 'INTERNAL SERVER ERROR',
+            error: 'Internal server error',
             details: err.message
         });
     }
