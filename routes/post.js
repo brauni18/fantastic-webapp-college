@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const postController = require('../controller/post');
+const postController = require('../controllers/post');
+const groupService = require('../services/group');
 
 
 // Configure multer for file uploads
@@ -14,34 +15,25 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage: storage });
-
-router.get('/create', (req, res) => {
-  res.render('createPost');
+router.get('/create', async(req, res) => {
+  const communities = await groupService.getAllGroups();
+  res.render('createPost',{ communities: communities });
 });
-const logRequest = (req, res, next) => {
-    console.log('🚦 === MIDDLEWARE HIT ===');
-    console.log('🚦 Method:', req.method);
-    console.log('🚦 URL:', req.originalUrl);
-    console.log('🚦 Body:', req.body);
-
-    next(); // Pass control to next middleware/controller
-};
 
 router.route('/')
+.get(postController.getAllPosts) // get posts
 .post( upload.fields([
   { name: 'image-file', maxCount: 3 },
   { name: 'video-file', maxCount: 3 }
 ]),
-logRequest,
-postController.createPost)
-.get(postController.getAllPosts); // get posts
 
+postController.createPost);
+router.get('/community/:id', postController.getPostsByCommunity);
+router.get('/community/name/:name', postController.getPostsByCommunityName);
+router.post('/:id/like',postController.toggleLike);
+router.post('/:id/comments', postController.addComment);
+router.get('/:id/comments', postController.getCommentsByPostId);
 
-// router.get('/group/:groupId', postController.getPostsByGroup);
-
-// router.get('/my-posts', postController.getPostsByUser);
-
-// router.delete('/:id', postController.deletePost);
 
 
 module.exports = router;
