@@ -1,4 +1,4 @@
-const groupService = require('../services/groupService');
+const groupService = require('../services/groups');
 
 // Create a new group
 const createGroup = async (req, res) => {
