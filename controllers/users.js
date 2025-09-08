@@ -1,7 +1,7 @@
 const userService = require('../services/users');
 
 function isLoggedIn(req, res, next) {
-    if (req.session.user) {
+    if (req.session.user && req.session.user.username != 'Guest') {
         return next();
     }
     res.redirect('/login');
@@ -95,10 +95,22 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+const savePinLocation = async (req, res) => {
+    try {
+        const { latitude, longitude } = req.body;
+        const userId = req.session.user._id;
+        await userService.savePinLocation(userId, latitude, longitude);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     createUser,
     loginUser,
     isLoggedIn,
+    savePinLocation,
     loginForm,
     foo,
     registerForm,

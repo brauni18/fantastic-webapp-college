@@ -33,6 +33,8 @@ router.get('/checkForGetUserAndGetUsers', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
+router.post('/api/users/save-pin', userController.isLoggedIn, userController.savePinLocation);
     
 
 module.exports = router;

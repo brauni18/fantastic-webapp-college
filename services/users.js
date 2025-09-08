@@ -85,11 +85,23 @@ const getAllUsers = async () => {
     return users;
 };
 
+const savePinLocation = async (userId, latitude, longitude) => {
+    return await User.findByIdAndUpdate(
+        userId, 
+        { 
+            pishpunLatitude: latitude, 
+            pishpunLongitude: longitude 
+        }, 
+        { new: true }
+    );
+};
+
 module.exports = {
     createUser,
     loginUser,
     updateUser,
     deleteUser,
     getUser,
-    getAllUsers
+    getAllUsers,
+    savePinLocation
 };
