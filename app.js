@@ -1,18 +1,18 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const bodyparser = require('body-parser');
 const cors = require('cors');
-const session = require('express-session');
 const mongoose = require('mongoose');
-//require('dotenv').config();
 const dotenv = require('dotenv');
+const session = require('express-session');
 
-
+const userRoutes = require('./routes/users');
 const post_Router = require('./routes/post');
-const users_Router = require('./routes/users');
-const groups_Router = require('./routes/groups');
+const groupRoutes = require('./routes/group');
 
+dotenv.config({ path: './config/.env' });
 
-require('custom-env').env(process.env.NODE_ENV,'./config');
+mongoose.connect(process.env.CONNECTION_STRING);
+
 mongoose.connect(process.env.CONNECTION_STRING, { })
 .then(() => {
     console.log('✅ Connected to MongoDB successfully');
@@ -22,27 +22,35 @@ mongoose.connect(process.env.CONNECTION_STRING, { })
     process.exit(1);
 });
 
-dotenv.config({ path: './config/.env' });
-var app = express();
+
+const app = express();
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/', userRoutes);
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
+
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true
 }));
-app.get('/', (req, res) => {
-  res.render('index');
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
 });
-//routes
+app.use(express.urlencoded({ extended: false }));
+
+app.use('/', userRoutes);
+
 app.use('/posts', post_Router);
-app.use('/users', users_Router);
-app.use('/groups', groups_Router);
+app.use('/groups', groupRoutes);
+
+app.get('/feed', (req, res) => {
+    res.render('index');
+});
 
 
 app.listen(process.env.PORT);

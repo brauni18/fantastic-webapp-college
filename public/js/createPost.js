@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   document.querySelectorAll('.home-link').forEach(link => {
     link.addEventListener('click', (e) => {
-      window.location.href = '/';
+      window.location.href = '/feed';
     });
   });
 });
@@ -104,7 +104,7 @@ const selectPostType = (type) => {
 const  handlePostSubmit= async (event) => {
   event.preventDefault();
 
-  const createdBy = '64a7f3c4f1d2c8b5e6a7d8e9'; // Example user ID
+  const createdBy = window.currentUsername; // Replace with actual user ID from session/auth
   const community = document.getElementById('community-select').value; // or set to a valid community ID if needed
   const type = text_button.classList.contains('active') ? 'text' : 
                image_button.classList.contains('active') ? 'image' : 
@@ -156,7 +156,7 @@ const  handlePostSubmit= async (event) => {
       const newPost = await response.json();
       console.log('Post created:', newPost);
       // Redirect to home or posts page after successful creation
-      window.location.href = '/';
+      window.location.href = '/feed';
   } catch (error) {
     console.error('Network error:', error);
     alert('Network error: Unable to connect to server');

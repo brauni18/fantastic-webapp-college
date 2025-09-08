@@ -1,3 +1,4 @@
+const { get } = require('mongoose');
 const postService = require('../services/post');
 
 // Validation functions - these return error messages or null
@@ -114,8 +115,7 @@ const createPost = async (req, res) => {
            });
         }
         // Step 3: Extract validated data
-        const { type, title, content, createdBy, community } = req.body;
-
+        const { createdBy, type, title, content, community } = req.body;
         // Step 4: Create post based on type
         let postData = {
             type,
@@ -160,7 +160,80 @@ const getAllPosts = async (req, res) => {
     res.json(posts);
 };
 
+const toggleLike = async (req, res) => {
+    try{
+        
+        const { postId, userId } = req.body;
+        
+        console.log('controller - Toggle like - User ID from body:', userId);
+       if(!userId){
+        return res.status(401).json({ error: 'User ID is required' });
+       }
+       const updatedPost = await postService.togglelike(postId, userId);
+       res.json(updatedPost);
+    } catch (error) {
+        console.error('Error toggling like:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};   
+const addComment = async (req, res) => {
+    try {
+        const { postId, comment, username } = req.body;
+
+        if (!username) {
+            return res.status(401).json({ error: 'User not authenticated' });
+        }
+         if (!comment || comment.trim() === '') {
+            return res.status(400).json({ message: 'Comment cannot be empty.' });
+        }
+        if (comment.length > 300) {
+            return res.status(400).json({ message: 'Comment exceeds maximum length of 300 characters.' });
+        }
+        const newComment = await postService.addComment(postId, username, comment);
+        res.status(201).json(newComment);
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+const getCommentsByPostId = async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const comments = await postService.getCommentsByPostId(postId);
+        res.json(comments);
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const getPostsByCommunity = async (req, res) => {
+    try {
+        const communityId = req.params.id;
+        const posts = await postService.getPostsByCommunity(communityId);
+        res.json(posts);
+    } catch (error) {
+        console.error('Error fetching posts by community:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+const getPostsByCommunityName = async (req, res) => {
+    try {
+        // Decode the name from the URL parameter
+        const communityName = decodeURIComponent(req.params.name);
+        const posts = await postService.getPostsByCommunityName(communityName);
+        res.json(posts);
+    } catch (error) {
+        console.error('Error fetching posts by community name:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 module.exports = {
     createPost,
-    getAllPosts
+    getAllPosts,
+    toggleLike,
+    addComment,
+    getPostsByCommunityName,
+    getPostsByCommunity,
+    getCommentsByPostId
 };

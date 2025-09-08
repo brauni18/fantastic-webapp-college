@@ -11,12 +11,11 @@ const postSchema = new mongoose.Schema({
   community: {type: String, default: '', trim: true},
   createdBy: {type: String, required: true},
   createdAt: {type: Date, default: Date.now},
-
-  likes: {type: Number, default: 0},
-  dislikes: {type: Number, default: 0},
-  comments: {type: Number, default: 0},
+  //likes should be an array of user IDs who liked the post
+  likes: {type: [String], default: []},
+  //comments should be an array of objects with user name and comment text
+  comments: {type: [Object], default: []},
   shares: {type: Number, default: 0},
 });
 
 module.exports = mongoose.model('Post', postSchema);
-
