@@ -100,11 +100,11 @@ const getGroupPage = async (req, res) => {
 
         const posts = await postService.getPostsByCommunity(groupId);
 
-        res.render('groupPage', { 
-            group: group, 
-            posts: posts,
-            user: req.user // Pass user for navbar/sidebar logic
-        });
+            res.render('groupPage', { 
+                group: group, 
+                posts: posts,
+                user: req.session.user // Pass user for navbar/sidebar logic
+            });
 
     } catch (err) {
         console.error('❌ controller - Error in getGroupPage:', err);
