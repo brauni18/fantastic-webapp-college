@@ -15,12 +15,12 @@ async function createGroup(name, description, createdBy) {
     }
 }
 const getAllGroups = async () => {
-    console.log('📝 service - Getting all groups');
+    console.log('service getting groups');
     return await Group.find().sort({ createdAt: -1 });
     
 };
 const getGroupById = async (groupId) => {
-    console.log(`📝 service - Getting group by ID: ${groupId}`);
+    console.log(`service getting groupID: ${groupId}`);
     return await Group.findById(groupId);
 };
 

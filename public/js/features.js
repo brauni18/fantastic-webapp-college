@@ -15,11 +15,8 @@ let map;
       subTitle: 'Our government spies are currently tracking you.'
     });
     
-    map.entities.push(pushpin);
-    
     const mapElement = document.getElementById('map');
     
-    // Combined toggle function
     function toggleMap() {
       isExpanded = !isExpanded;
       mapElement.classList.toggle('expanded', isExpanded);
@@ -27,36 +24,28 @@ let map;
         Microsoft.Maps.Events.invoke(map, 'resize');
       }, 100);
     }
-
-    // Function to add pins
+    map.entities.push(pushpin);
     function addPinAtLocation(location) {
-      // Remove the old pin if it exists
       if (userPlacedPin) {
         map.entities.remove(userPlacedPin);
       }
       
-      // Create a new red pin at the clicked location
       userPlacedPin = new Microsoft.Maps.Pushpin(location, {
         title: 'Pishpun',
         subTitle: `^ ${location.latitude.toFixed(3)} > ${location.longitude.toFixed(3)}`,
         icon: '/images/pishpun.png'
       });
       
-      // Add the new pin to the map
       map.entities.push(userPlacedPin);
-      
-      // Save pin location to database
       savePinToDatabase(location.latitude, location.longitude);
     }
 
-    // Click handler for map expansion/collapse
     document.addEventListener('click', function(e) {
       if (isExpanded !== mapElement.contains(e.target)) {
         toggleMap();
       }
     });
 
-    // Map click handler for placing pins
     Microsoft.Maps.Events.addHandler(map, 'click', function(e) {
       if (isExpanded) {
         var clickedLocation = e.location;
@@ -65,7 +54,6 @@ let map;
     });
   }
 
-  // Add this function after your addPinAtLocation function
   async function savePinToDatabase(latitude, longitude) {
     try {
       const response = await fetch('/api/users/save-pin', {
@@ -98,31 +86,21 @@ class StatisticsCharts {
   }
 
   async loadData() {
-    console.log('📊 Loading chart data...');
+    console.log('loading charts');
     try {
-      console.log('📊 Fetching posts data from /api/statistics/posts-per-day');
-      const postsResponse = await fetch('/api/statistics/posts-per-day');
-      console.log('📊 Fetching users data from /api/statistics/users-online-per-day');
-      const usersResponse = await fetch('/api/statistics/users-online-per-day');
-      
-      console.log('📊 Posts response status:', postsResponse.status);
-      console.log('📊 Users response status:', usersResponse.status);
+      const postsResponse = await fetch('/statistics/posts-per-day');
+      const usersResponse = await fetch('/statistics/users-online-per-day');
       
       if (!postsResponse.ok || !usersResponse.ok) {
-        throw new Error(`API Error: Posts ${postsResponse.status}, Users ${usersResponse.status}`);
+        throw new Error(`error/posts${postsResponse.status}, Users ${usersResponse.status}`);
       }
       
       const postsData = await postsResponse.json();
       const usersData = await usersResponse.json();
-      
-      console.log('📊 Posts data received:', postsData);
-      console.log('📊 Users data received:', usersData);
-      
       this.updatePostsChart(postsData.postsPerDay);
       this.updateUsersChart(usersData.usersOnlinePerDay);
     } catch (error) {
-      console.error('❌ Error loading chart data:', error);
-      // Fallback to mock data if API fails
+      console.error('Error on charts', error);
       const mockData = {
         postsPerDay: [
           {date: '9/2', count: 3}, {date: '9/3', count: 7}, {date: '9/4', count: 2},
@@ -141,16 +119,13 @@ class StatisticsCharts {
   initCharts() {
     const margin = {top: 20, right: 15, bottom: 30, left: 30};
     const width = 180 - margin.left - margin.right;
-    const height = 80 - margin.top - margin.bottom;  /* Reasonable chart height */
-
-    // Users online chart
+    const height = 80 - margin.top - margin.bottom;
     this.usersChart = d3.select("#users-online-chart")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
-
     this.usersChart.append("text")
       .attr("x", width / 2).attr("y", -5)
       .attr("text-anchor", "middle")
@@ -164,7 +139,6 @@ class StatisticsCharts {
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
-
     this.postsChart.append("text")
       .attr("x", width / 2).attr("y", -5)
       .attr("text-anchor", "middle")
@@ -175,22 +149,18 @@ class StatisticsCharts {
   updateUsersChart(data) {
     const margin = {top: 20, right: 15, bottom: 30, left: 30};
     const width = 180 - margin.left - margin.right;
-    const height = 80 - margin.top - margin.bottom;  /* Reasonable chart height */
-
+    const height = 80 - margin.top - margin.bottom;
     this.usersChart.selectAll(".bar, .axis").remove();
-
     const x = d3.scaleBand().domain(data.map(d => d.date)).range([0, width]).padding(0.1);
     const y = d3.scaleLinear()
       .domain([0, d3.max(data, d => d.count)])
       .nice()
       .range([height, 0]);
-
     this.usersChart.selectAll(".bar").data(data).enter().append("rect")
       .attr("class", "bar")
       .attr("x", d => x(d.date)).attr("width", x.bandwidth())
       .attr("y", d => y(d.count)).attr("height", d => height - y(d.count))
       .attr("fill", "#6597f2");
-
     this.usersChart.append("g").attr("class", "axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
     this.usersChart.append("g")
       .attr("class", "axis")
@@ -200,22 +170,18 @@ class StatisticsCharts {
   updatePostsChart(data) {
     const margin = {top: 20, right: 15, bottom: 30, left: 30};
     const width = 180 - margin.left - margin.right;
-    const height = 80 - margin.top - margin.bottom;  /* Reasonable chart height */
-
+    const height = 80 - margin.top - margin.bottom;
     this.postsChart.selectAll(".bar, .axis").remove();
-
     const x = d3.scaleBand().domain(data.map(d => d.date)).range([0, width]).padding(0.1);
     const y = d3.scaleLinear()
       .domain([0, d3.max(data, d => d.count)])
       .nice()
       .range([height, 0]);
-
     this.postsChart.selectAll(".bar").data(data).enter().append("rect")
       .attr("class", "bar")
       .attr("x", d => x(d.date)).attr("width", x.bandwidth())
       .attr("y", d => y(d.count)).attr("height", d => height - y(d.count))
       .attr("fill", "#00c46a");
-
     this.postsChart.append("g").attr("class", "axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
     this.postsChart.append("g")
       .attr("class", "axis") 
