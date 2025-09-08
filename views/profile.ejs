@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/universal.css" type="text/css">
 </head>
 
-<body>
+<body style="overflow-y: auto; max-height: 100vh;">
   <!-- Invisible hover area to trigger navbar -->
   <div id="navbar-hover-area" style="position:fixed;top:0;left:0;width:100vw;height:120px;z-index:9999;"></div>
   <header>
@@ -32,71 +32,86 @@
       </div>
     </div>
     <% } else { %>
-      <form id="register-form" class="form-signin" action="/update-profile" method="POST">
+  <form id="register-form" class="form-signin" action="/update-profile" method="POST" enctype="multipart/form-data">
         <div id="container" class="container center-container mt-4 text-center d-flex flex-column">
           <div class="content-wrapper">
             <div class="card-body">
-                            <div class ="card-title" style="margin-bottom: 20px;">
-                Logged in as: <b><%= user.username %></b>
-              </div>
+                            <!-- <div class ="card-title" style="margin-bottom: 20px;">
+                              Logged in as: <b><%= user.username %></b>
+                            </div> -->
+                            <!-- <% if (user.profilePic && user.profilePic.trim() !== '') { %>
+                              <div style="margin-bottom: 20px;">
+                                <img src="<%= user.profilePic %>" alt="Profile Picture" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                              </div>
+                            <% } else { %>
+                              <div style="margin-bottom: 20px;">
+                                <img src="/images/default_image.png" alt="Default Profile Picture" style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
+                              </div>
+                            <% } %> -->
+                              <div class="card-title d-flex align-items-center justify-content-between" style="margin-bottom: 20px;">
+                                <span>Logged in as: <b><%= user.username %></b></span>
+                                <% if (user.profilePic && user.profilePic.trim() !== '') { %>
+                                  <img src="<%= user.profilePic %>" alt="Profile Picture" style="width:70px;height:70px;border-radius:50%;object-fit:cover; margin-left:20px;">
+                                <% } %>
+                              </div>
               <h5 class="card-title"><b>Edit Profile</b></h5>
 
-              <div class="mb-2">
+              <div class="mb-1">
                 <div class="floating-label-group">
-                  <input type="text" name="username" class="form-control custom-input uniform-width" placeholder=" ">
+                  <input type="text" name="username" class="form-control custom-input uniform-width" placeholder=" " style="height:32px;">
                   <label for="username">Username</label>
                 </div>
               </div>
-              <div class="mb-2">
+              <div class="mb-1">
                 <div class="floating-label-group">
-                  <input type="email" name="email" class="form-control custom-input uniform-width" placeholder=" ">
+                  <input type="email" name="email" class="form-control custom-input uniform-width" placeholder=" " style="height:32px;">
                   <label for="email">Email</label>
                 </div>
               </div>
-              <div class="mb-2">
+              <div class="mb-1">
                 <div class="floating-label-group">
                   <input type="password" name="password" class="form-control custom-input uniform-width"
-                    placeholder=" ">
+                    placeholder=" " style="height:32px;">
                   <label for="password">Password</label>
                 </div>
               </div>
-              <div class="mb-2">
+              <div class="mb-1">
                 <div class="floating-label-group">
-                  <input type="text" name="firstName" class="form-control custom-input uniform-width" placeholder=" ">
+                  <input type="text" name="firstName" class="form-control custom-input uniform-width" placeholder=" " style="height:32px;">
                   <label for="firstName">First Name</label>
                 </div>
               </div>
-              <div class="mb-2">
+              <div class="mb-1">
                 <div class="floating-label-group">
-                  <input type="text" name="lastName" class="form-control custom-input uniform-width" placeholder=" ">
+                  <input type="text" name="lastName" class="form-control custom-input uniform-width" placeholder=" " style="height:32px;">
                   <label for="lastName">Last Name</label>
                 </div>
               </div>
-              <div class="mb-2">
+              <div class="mb-1">
                 <div class="floating-label-group">
                   <textarea name="bio" class="form-control custom-input uniform-width" placeholder="Bio (max 300 chars)"
-                    maxlength="300" style="resize:none; width:100%; box-sizing:border-box;"></textarea>
+                    maxlength="300" style="resize:none; width:100%; box-sizing:border-box; height:32px;"></textarea>
                   <!-- <label for="bio">Bio</label> -->
                 </div>
               </div>
               <div>
               <div style="margin-bottom:5px;">
-                <label for="avatar">Profile Picture:</label>
-                <label for="avatar" class="btn btn-secondary uniform-width" style="cursor:pointer;">
+                <label for="profilePic">Profile Picture:</label>
+                <label for="profilePic" class="btn btn-secondary uniform-width" style="cursor:pointer;">
                   Choose Image
-                  <input type="file" name="avatar" id="avatar" accept="image/*" style="display:none;">
+                  <input type="file" name="profilePic" id="profilePic" accept="image/*" style="display:none;">
                 </label>
-                <span id="avatar-filename" style="margin-left:10px; margin-bottom:none;"></span>
+                <span id="profilePic-filename" style="margin-left:10px; margin-bottom:none;"></span>
               </div>
                 <script>
                   document.addEventListener('DOMContentLoaded', function () {
-                    var avatarInput = document.getElementById('avatar');
-                    var avatarFilename = document.getElementById('avatar-filename');
-                    avatarInput.addEventListener('change', function () {
-                      if (avatarInput.files.length > 0) {
-                        avatarFilename.textContent = avatarInput.files[0].name;
+                    var picInput = document.getElementById('profilePic');
+                    var picFilename = document.getElementById('profilePic-filename');
+                    picInput.addEventListener('change', function () {
+                      if (picInput.files.length > 0) {
+                        picFilename.textContent = picInput.files[0].name;
                       } else {
-                        avatarFilename.textContent = '';
+                        picFilename.textContent = '';
                       }
                     });
                   });
@@ -109,9 +124,9 @@
                 </div>
                 <% } %>
                   <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
-                    <button type="submit" class="btn btn-secondary uniform-width">Save Changes</button>
-                    <button type="button" class="btn btn-danger" id="deleteButton">Delete User</button>
-                    <a href="/" class="btn btn-primary uniform-width" style="text-decoration:none;">Return to Home</a>
+                    <button type="submit" class="btn btn-secondary btn-sm uniform-width">Save Changes</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="deleteButton">Delete User</button>
+                    <a href="/" class="btn btn-primary uniform-width btn-sm" style="text-decoration:none;">Return to Home</a>
                   </div>
             </div>
           </div>

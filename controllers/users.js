@@ -26,12 +26,19 @@ function logout(req, res) {
 }
 
 function profile(req, res) {
-    res.render("profile", { username: req.session.user });
+    res.render("profile", { user: req.session.user });
 }
 
 const createUser = async (req, res) => {
     try {
-        await userService.createUser(req.body);
+        let profilePicPath = '';
+        if (req.file) {
+            profilePicPath = '/uploads/' + req.file.filename;
+        }
+        await userService.createUser({
+            ...req.body,
+            profilePic: profilePicPath
+        });
         res.redirect('/login'); // Redirect to login page after successful registration
     } catch (error) {
         const msg = error.message || 'Internal server error';
@@ -55,8 +62,22 @@ const loginUser = async (req, res) => {
 
 
 const updateUser = async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
     try {
-        await userService.updateUser({ ...req.body, username: req.session.user.username, newUsername: req.body.username });
+        let profilePicPath = req.session.user.profilePic || '';
+        if (req.file) {
+            profilePicPath = '/uploads/' + req.file.filename;
+        }
+        await userService.updateUser({
+            ...req.body,
+            username: req.session.user.username,
+            newUsername: req.body.username,
+            profilePic: profilePicPath
+        });
+        const updatedUser = await userService.getUser(req.session.user.username);
+        req.session.user = updatedUser;
         res.redirect('/feed'); // Redirect to homepage after successful update
     } catch (error) {
         const msg = error.message || 'Internal server error';

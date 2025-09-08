@@ -1,7 +1,7 @@
 const User = require('../models/users');
 const bcrypt = require('bcrypt');
 
-const createUser = async ({username, email, password, firstName, lastName, bio}) => {
+const createUser = async ({username, email, password, firstName, lastName, bio, profilePic}) => {
     if(!username || !email || !password || !firstName || !lastName) {
         throw new Error('All fields are required');
     }
@@ -16,7 +16,8 @@ const createUser = async ({username, email, password, firstName, lastName, bio})
         password: hashedPassword,
         firstName,
         lastName,
-        bio
+        bio,
+        profilePic: profilePic || ''
     });
     await newUser.save();
     return { message: 'User created successfully' };
@@ -53,6 +54,9 @@ const updateUser = async ({ username, newUsername, email, firstName, lastName, b
     if (password) {
         const hashedPassword = await bcrypt.hash(password, 10);
         user.password = hashedPassword;
+    }
+    if (arguments[0].profilePic) {
+        user.profilePic = arguments[0].profilePic;
     }
     await user.save();
     return { message: 'User updated successfully' };
