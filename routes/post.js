@@ -33,7 +33,7 @@ router.get('/community/name/:name', postController.getPostsByCommunityName);
 router.post('/:id/like',postController.toggleLike);
 router.post('/:id/comments', postController.addComment);
 router.get('/:id/comments', postController.getCommentsByPostId);
-
-
+router.delete('/:id', postController.deletePost);
+router.put('/:id', postController.updatePost);
 
 module.exports = router;

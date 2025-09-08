@@ -104,6 +104,29 @@ const getCommentsByPostId = async (postId) => {
         throw new Error('service - Failed to get comments: ' + error.message);
     }
 };
+const deletePost = async (postId) => {
+    try {
+        const result = await PostModel.deleteOne({ _id: postId });
+        return result;
+    } catch (error) {
+        console.error('service - Error deleting post:', error);
+        throw new Error('service - Failed to delete post: ' + error.message);
+    }
+};
+const updatePost = async (postId, updateData) => {
+    try {
+        const updatedPost = await PostModel.findByIdAndUpdate(
+            postId, 
+            updateData, 
+            { new: true } // Return the updated document
+        );
+        return updatedPost;
+    } catch (error) {
+        console.error('service - Error updating post:', error);
+        throw new Error('service - Failed to update post: ' + error.message);
+    }
+};
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -111,5 +134,7 @@ module.exports = {
     addComment,
     getCommentsByPostId,
     getPostsByCommunityName,
-    getPostsByCommunity
+    getPostsByCommunity,
+    deletePost,
+    updatePost
 };

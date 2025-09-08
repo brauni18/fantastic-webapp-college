@@ -64,14 +64,20 @@ const createPostElement = (post) => {
     
     postitem.innerHTML = `
     <div id="post-${post._id}" class="card-body">
-    <div class="post-header d-flex align-items-center mb-2" style="font-size: 0.85rem;">
-    <a href="/c/${communityName}" class="fw-bold me-2 text-decoration-none">${communityName}</a><span class="text-muted">·</span> 
-    <span class="text-muted ms-2">${new Date(post.createdAt).toLocaleDateString()}</span>
-    
-    </div>
-    <div>
-    <span class="text-muted ms-2">${authorName}</span>
-    </div>
+      <div class="post-header d-flex align-items-center mb-2" style="font-size: 0.85rem;">
+        <a href="/c/${communityName}" class="fw-bold me-2 text-decoration-none">${communityName}</a><span class="text-muted">·</span> 
+        <span class="text-muted ms-2">${new Date(post.createdAt).toLocaleDateString()}</span>
+        <!--if user is the author of the post, show edit and delete buttons-->
+        <span class="ms-auto">
+        ${post.createdBy === currentUserId ? `
+          <button class="btn btn-sm btn-outline-secondary me-2 edit-post-btn" id="edit-${post._id}">Edit</button>
+          <button class="btn btn-sm btn-outline-danger delete-post-btn" id="delete-${post._id}">Delete</button>
+        ` : ''}
+        </span>
+      </div>
+      <div>
+      <span class="text-muted ms-2">${authorName}</span>
+      </div>
             <h5 class="card-title">${post.title}</h5>
             <div class="post-content mb-3">${contentHtml}</div>
             <div class="post-footer d-flex align-items-center">
@@ -131,9 +137,172 @@ const createPostElement = (post) => {
     shareBtn.addEventListener('click', async () => {
       console.log('Share button clicked for post:', post._id);
     });
+
+    if (post.createdBy === currentUserId) {
+      const editBtn = postitem.querySelector(`#edit-${post._id}`);
+      editBtn.addEventListener('click', async () => {
+        console.log('Edit button clicked for post:', post._id);
+        editPost(post._id);
+      });
+      const deleteBtn = postitem.querySelector(`#delete-${post._id}`);
+      deleteBtn.addEventListener('click', async () => {
+        console.log('Delete button clicked for post:', post._id);
+        deletePost(post._id);
+      });
+    }
     return postitem;
 };
+const editPost = (postId) => {
+  // Get the post element
+  const postElement = document.getElementById(`post-${postId}`);
+  const titleElement = postElement.querySelector('.card-title');
+  const contentElement = postElement.querySelector('.post-content');
+  
+  // Store original values
+  const originalTitle = titleElement.textContent;
+  const originalContent = contentElement.innerHTML;
+  
+  // Replace with editable inputs
+  titleElement.innerHTML = `<input type="text" class="form-control" value="${originalTitle}" id="edit-title-${postId}">`;
+  contentElement.innerHTML = `<textarea class="form-control" rows="3" id="edit-content-${postId}">${originalContent.replace(/<[^>]*>/g, '')}</textarea>`;
+  
+  // Add save/cancel buttons
+  const saveBtn = postElement.querySelector(`#edit-${postId}`);
+  saveBtn.innerHTML = 'Save';
+  saveBtn.className = 'btn btn-sm btn-success me-2';
 
+  const cancelBtn = postElement.querySelector(`#delete-${postId}`);
+  cancelBtn.innerHTML = 'Cancel';
+  cancelBtn.className = 'btn btn-sm btn-secondary';
+
+  // Handle save
+  saveBtn.onclick = async () => {
+    const newTitle = document.getElementById(`edit-title-${postId}`).value.trim();
+    const newContent = document.getElementById(`edit-content-${postId}`).value.trim();
+    
+    if (!newTitle) {
+      alert('Title is required');
+      return;
+    }
+    
+    await savePostEdit(postId, newTitle, newContent, originalTitle, originalContent, postElement);
+  };
+  
+  // Handle cancel
+  cancelBtn.onclick = () => {
+    cancelPostEdit(postId, originalTitle, originalContent, postElement);
+  };
+};
+
+const savePostEdit = async (postId, newTitle, newContent, originalTitle, originalContent, postElement) => {
+  try {
+    console.log('Saving post with:', { postId, newTitle, newContent });
+    
+    if (!newTitle || newTitle.trim() === '') {
+      alert('Title is required');
+      return;
+    }
+    const response = await fetch(`${API_BASE_URL}/${postId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: newTitle,
+        content: newContent
+      }),
+      credentials: 'include'
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to update post');
+    }
+    
+     console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Server error:', errorData);
+      throw new Error(errorData.error || 'Failed to update post');
+    }
+    
+    const updatedPost = await response.json();
+    console.log('Updated post:', updatedPost);
+    
+    // Update the UI with new values
+    const titleElement = postElement.querySelector('.card-title');
+    const contentElement = postElement.querySelector('.post-content');
+    
+    titleElement.innerHTML = newTitle;
+    contentElement.innerHTML = `<p class="card-text">${newContent}</p>`;
+    
+    // Restore buttons
+    restoreEditButtons(postId, postElement);
+    
+    console.log('Post updated successfully');
+    
+  } catch (error) {
+    console.error('Error updating post:', error);
+    alert('Failed to update post. Please try again.');
+    
+    // Restore original content on error
+    cancelPostEdit(postId, originalTitle, originalContent, postElement);
+  }
+};
+
+const cancelPostEdit = (postId, originalTitle, originalContent, postElement) => {
+  const titleElement = postElement.querySelector('.card-title');
+  const contentElement = postElement.querySelector('.post-content');
+  
+  titleElement.innerHTML = originalTitle;
+  contentElement.innerHTML = originalContent;
+  
+  restoreEditButtons(postId, postElement);
+};
+
+const restoreEditButtons = (postId, postElement) => {
+  const editBtn = postElement.querySelector(`#edit-${postId}`);
+  const cancelBtn = postElement.querySelector(`#delete-${postId}`);
+
+  editBtn.innerHTML = 'Edit';
+  editBtn.className = 'btn btn-sm btn-outline-secondary me-2 edit-post-btn';
+  editBtn.onclick = () => editPost(postId);
+  
+  cancelBtn.innerHTML = 'Cancel';
+  cancelBtn.className = 'btn btn-sm btn-secondary';
+  cancelBtn.onclick = () => cancelPostEdit(postId, originalTitle, originalContent, postElement);
+};
+const deletePost = async (postId) => {
+  if (!confirm('Are you sure you want to delete this post?')) return;
+  try {
+    const response = await fetch(`${API_BASE_URL}/${postId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+    
+    if (!response.ok) {
+      throw new Error('Server failed to delete post');
+    }
+    
+    // ✅ Check if response has content before parsing JSON
+    let result = {};
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      result = await response.json();
+    }
+    
+    console.log('Post deleted successfully:', result);
+    
+    // Remove the post from the UI
+    const postElement = document.getElementById(`post-${postId}`);
+    if (postElement) {
+      postElement.closest('.post-card').remove(); // Remove the entire card
+    }
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    alert('Failed to delete post. Please try again.');
+  }
+};
 //toggle like has to send user id to backend and checks if user id is in likes array
 const toggleLike = async (postId, likeBtn) => {
   const currentUserId = window.currentUsername;
