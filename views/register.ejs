@@ -51,7 +51,7 @@
             </div>
           </div>
         <% } else { %>
-          <form id="register-form" class="form-signin" action="/register" method="POST">
+          <form id="register-form" class="form-signin" action="/register" method="POST" enctype="multipart/form-data">
             <div id="container" class="container center-container mt-4 text-center d-flex flex-column">
               <div class="content-wrapper">
                 <div class="card-body">
@@ -93,23 +93,23 @@
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label for="avatar">Profile Picture:</label>
+                    <label for="profilePic">Profile Picture:</label>
                     <div class="mb-2">
-                      <label for="avatar" class="btn btn-secondary uniform-width" style="cursor:pointer;">
+                      <label for="profilePic" class="btn btn-secondary uniform-width" style="cursor:pointer;">
                         Choose Image
-                        <input type="file" name="avatar" id="avatar" accept="image/*" style="display:none;">
+                        <input type="file" name="profilePic" id="profilePic" accept="image/*" style="display:none;">
                       </label>
-                      <span id="avatar-filename" style="margin-left:10px;"></span>
+                      <span id="profilePic-filename" style="margin-left:10px;"></span>
                     </div>
                     <script>
                       document.addEventListener('DOMContentLoaded', function() {
-                        var avatarInput = document.getElementById('avatar');
-                        var avatarFilename = document.getElementById('avatar-filename');
-                        avatarInput.addEventListener('change', function() {
-                          if (avatarInput.files.length > 0) {
-                            avatarFilename.textContent = avatarInput.files[0].name;
+                        var picInput = document.getElementById('profilePic');
+                        var picFilename = document.getElementById('profilePic-filename');
+                        picInput.addEventListener('change', function() {
+                          if (picInput.files.length > 0) {
+                            picFilename.textContent = picInput.files[0].name;
                           } else {
-                            avatarFilename.textContent = '';
+                            picFilename.textContent = '';
                           }
                         });
                       });
