@@ -16,10 +16,10 @@ mongoose.connect(process.env.CONNECTION_STRING);
 
 mongoose.connect(process.env.CONNECTION_STRING, { })
 .then(() => {
-    console.log('✅ Connected to MongoDB successfully');
+    console.log('Connected to MongoDB successfully');
 })
 .catch((error) => {
-    console.error('❌ MongoDB connection error:', error);
+    console.error('MongoDB connection error:', error);
     process.exit(1);
 });
 
@@ -48,6 +48,7 @@ app.use('/', userRoutes);
 
 app.use('/posts', post_Router);
 app.use('/groups', groupRoutes);
+app.use('/statistics', statisticsRouter);
 
 app.get('/feed', (req, res) => {
     res.render('index');
